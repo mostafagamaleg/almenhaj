@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التقارير - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="reports">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in alm-panel p-6">
+      <div class="mb-6 flex items-center justify-between"><div><span class="alm-badge">Reports</span><h1 class="mt-3 text-3xl font-black">تقارير المنصة</h1></div><button class="alm-btn alm-btn-primary" data-toast="تم تجهيز التقرير للتصدير">تصدير CSV</button></div>
+      <div class="alm-table-wrap">
+        <table class="alm-table">
+          <thead><tr><th>التقرير</th><th>النطاق</th><th>آخر تحديث</th><th>الحالة</th></tr></thead>
+          <tbody>
+            <tr><td>تقرير تقدم الطلاب</td><td>شهري</td><td>اليوم</td><td><span class="alm-badge">جاهز</span></td></tr>
+            <tr><td>تقرير أداء المعلمين</td><td>ربع سنوي</td><td>أمس</td><td><span class="alm-badge">جاهز</span></td></tr>
+            <tr><td>تقرير الشهادات</td><td>سنوي</td><td>15 يونيو</td><td><span class="alm-badge gold">قيد المراجعة</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'reports', title:'التقارير', subtitle:'Reports'});</script>
+</body>
+</html>

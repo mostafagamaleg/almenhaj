@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التحليلات - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="analytics">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in">
+      <div class="mb-6 grid gap-4 md:grid-cols-4" data-stats></div>
+      <div class="grid gap-5 xl:grid-cols-[1fr_360px]">
+        <div class="alm-panel p-6">
+          <h1 class="text-3xl font-black">تحليلات التعلم</h1>
+          <div class="mt-8 alm-chart-bar">
+            <span style="height:36%"></span><span style="height:58%"></span><span style="height:71%"></span><span style="height:52%"></span><span style="height:83%"></span><span style="height:66%"></span><span style="height:92%"></span>
+          </div>
+        </div>
+        <div class="alm-panel p-5"><h2 class="text-xl font-black">مؤشرات الجودة</h2><div class="mt-5 space-y-4"><div><div class="flex justify-between"><span>إكمال الدروس</span><b>82%</b></div><div class="alm-progress mt-2"><span style="width:82%"></span></div></div><div><div class="flex justify-between"><span>نجاح الاختبارات</span><b>76%</b></div><div class="alm-progress mt-2"><span style="width:76%"></span></div></div><div><div class="flex justify-between"><span>تحميل الشهادات</span><b>61%</b></div><div class="alm-progress mt-2"><span style="width:61%"></span></div></div></div></div>
+      </div>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'reports', title:'التحليلات', subtitle:'Analytics'});</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+  <main class="grid min-h-screen lg:grid-cols-[1fr_520px]">
+    <section class="alm-hero-visual relative hidden p-10 text-white lg:block">
+      <div class="alm-pattern absolute inset-0 opacity-20"></div>
+      <a href="index.html" class="relative z-10 flex items-center gap-3">
+        <span class="grid h-12 w-12 place-items-center rounded-xl bg-white/10 text-[var(--alm-gold-300)]"><i data-lucide="book-open-text"></i></span>
+        <b class="text-2xl">المنهاج</b>
+      </a>
+      <div class="relative z-10 mt-28 max-w-xl">
+        <span class="alm-badge gold">Welcome back</span>
+        <h1 class="mt-6 text-5xl font-black leading-tight">أكمل رحلتك العلمية من حيث توقفت</h1>
+        <p class="mt-5 leading-8 text-white/75">تسجيل دخول آمن للطلاب والمعلمين والإدارة مع تجربة SaaS احترافية.</p>
+      </div>
+    </section>
+    <section class="grid place-items-center p-5">
+      <form class="alm-panel w-full max-w-md p-7" action="student.html">
+        <a href="index.html" class="mb-8 flex items-center gap-3 lg:hidden">
+          <span class="grid h-11 w-11 place-items-center rounded-xl bg-[var(--alm-green-900)] text-[var(--alm-gold-300)]"><i data-lucide="book-open-text"></i></span>
+          <b class="text-xl">المنهاج</b>
+        </a>
+        <span class="alm-badge">تسجيل الدخول</span>
+        <h1 class="mt-4 text-3xl font-black">مرحباً بعودتك</h1>
+        <p class="mt-2 text-sm leading-7 text-[var(--alm-muted)]">ادخل إلى حسابك لمتابعة الدروس والاختبارات والشهادات.</p>
+        <label class="mt-6 block text-sm font-extrabold">البريد الإلكتروني</label>
+        <input class="alm-input mt-2" type="email" value="student@alminhaj.com" />
+        <label class="mt-4 block text-sm font-extrabold">كلمة المرور</label>
+        <input class="alm-input mt-2" type="password" value="12345678" />
+        <div class="mt-4 flex items-center justify-between text-sm">
+          <label class="flex items-center gap-2"><input type="checkbox" checked /> تذكرني</label>
+          <a class="font-bold text-[var(--alm-green-800)]" href="forgot-password.html">نسيت كلمة المرور؟</a>
+        </div>
+        <button class="alm-btn alm-btn-primary mt-6 w-full" type="submit">دخول المنصة</button>
+        <p class="mt-5 text-center text-sm text-[var(--alm-muted)]">ليس لديك حساب؟ <a href="register.html" class="font-black text-[var(--alm-green-800)]">إنشاء حساب</a></p>
+      </form>
+    </section>
+  </main>
+  <script src="js/navigation.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

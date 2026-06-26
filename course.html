@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مكتبة المسارات - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="library">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in">
+      <div class="alm-panel mb-6 p-6">
+        <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+          <div><span class="alm-badge gold">Course Library</span><h1 class="mt-3 text-3xl font-black">مكتبة المسارات</h1><p class="mt-2 text-[var(--alm-muted)]">تصفح القرآن والتفسير والفقه والعقيدة والحديث واللغة العربية.</p></div>
+          <div class="flex flex-wrap gap-2" data-filter-group>
+            <button class="alm-btn alm-btn-primary" data-filter="all">الكل</button>
+            <button class="alm-btn alm-btn-secondary" data-filter="القرآن">القرآن</button>
+            <button class="alm-btn alm-btn-secondary" data-filter="التفسير">التفسير</button>
+            <button class="alm-btn alm-btn-secondary" data-filter="الفقه">الفقه</button>
+            <button class="alm-btn alm-btn-secondary" data-filter="العقيدة">العقيدة</button>
+            <button class="alm-btn alm-btn-secondary" data-filter="الحديث">الحديث</button>
+            <button class="alm-btn alm-btn-secondary" data-filter="اللغة">اللغة</button>
+          </div>
+        </div>
+      </div>
+      <div data-courses class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'library', title:'مكتبة المسارات', subtitle:'Course Library'});</script>
+</body>
+</html>

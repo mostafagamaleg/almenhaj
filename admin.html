@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة الإدارة - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="admin">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in">
+      <div class="mb-6 grid gap-4 md:grid-cols-4" data-stats></div>
+      <div class="grid gap-5 xl:grid-cols-[1fr_360px]">
+        <div class="alm-panel bg-[var(--alm-green-950)] p-6 text-white">
+          <div class="mb-6 flex items-center justify-between">
+            <div><span class="alm-badge gold">Live Analytics</span><h2 class="mt-3 text-2xl font-black">الإحصائيات الحية</h2></div>
+            <a class="alm-btn border border-white/15 bg-white/10 text-white" href="analytics.html">فتح التحليلات</a>
+          </div>
+          <div class="grid gap-4 md:grid-cols-[1fr_260px]">
+            <div class="alm-pattern grid min-h-[320px] place-items-center rounded-2xl border border-white/10 bg-white/10">
+              <div class="text-center"><i data-lucide="map-pinned" class="mx-auto h-24 w-24 text-[var(--alm-gold-300)]"></i><p class="mt-3 text-sm text-white/60">خريطة انتشار الطلاب</p></div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-5">
+              <h3 class="font-black">أداء المحافظات</h3>
+              <div class="mt-5 space-y-4 text-sm">
+                <div><div class="flex justify-between"><span>القاهرة</span><b>85%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:85%"></span></div></div>
+                <div><div class="flex justify-between"><span>الجيزة</span><b>76%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:76%"></span></div></div>
+                <div><div class="flex justify-between"><span>الإسكندرية</span><b>74%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:74%"></span></div></div>
+                <div><div class="flex justify-between"><span>المنوفية</span><b>70%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:70%"></span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="space-y-5">
+          <div class="alm-panel p-5">
+            <h3 class="text-xl font-black">إدارة النظام</h3>
+            <div class="mt-4 grid gap-3">
+              <a class="alm-card p-4" href="reports.html"><b>التقارير</b><span class="block text-sm text-[var(--alm-muted)]">تقارير الأداء والاختبارات</span></a>
+              <a class="alm-card p-4" href="settings.html"><b>الأدوار والصلاحيات</b><span class="block text-sm text-[var(--alm-muted)]">طلاب، معلمون، مشرفون</span></a>
+              <a class="alm-card p-4" href="course.html"><b>إدارة المسارات</b><span class="block text-sm text-[var(--alm-muted)]">42 مسار نشط</span></a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'admin', title:'لوحة الإدارة', subtitle:'إدارة المنصة بالكامل'});</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مشغل الدرس - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="lesson">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in grid gap-5 xl:grid-cols-[1fr_360px]">
+      <div class="space-y-5">
+        <div class="alm-panel p-4">
+          <div class="alm-video">
+            <span class="alm-play"><i data-lucide="play" class="h-9 w-9 fill-current"></i></span>
+            <div class="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-5 text-white">
+              <div class="alm-progress bg-white/20"><span style="width:42%"></span></div>
+              <div class="mt-3 flex justify-between text-xs"><span>12:15 / 26:40</span><span>الشيخ د. محمد الطيب</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="alm-panel p-6">
+          <div class="flex flex-col justify-between gap-3 md:flex-row md:items-start">
+            <div><span class="alm-badge gold">سورة النبأ</span><h1 class="mt-3 text-3xl font-black">تفسير الآيات 1-10</h1><p class="mt-2 text-[var(--alm-muted)]">درس فيديو مع نص، ملاحظات، ملفات، وتعليقات.</p></div>
+            <a class="alm-btn alm-btn-primary" href="quiz.html">بدء الاختبار</a>
+          </div>
+          <div data-tabs class="mt-6">
+            <div class="mb-4 flex flex-wrap gap-2">
+              <button class="alm-btn alm-btn-primary" data-tab-target="notes">الملاحظات</button>
+              <button class="alm-btn alm-btn-secondary" data-tab-target="transcript">النص</button>
+              <button class="alm-btn alm-btn-secondary" data-tab-target="attachments">المرفقات</button>
+              <button class="alm-btn alm-btn-secondary" data-tab-target="comments">التعليقات</button>
+            </div>
+            <div class="alm-tab-panel active" data-tab-panel="notes"><textarea class="alm-input min-h-32" placeholder="اكتب ملاحظتك أثناء الدرس..."></textarea><button class="alm-btn alm-btn-primary mt-3" data-toast="تم حفظ الملاحظة">حفظ الملاحظة</button></div>
+            <div class="alm-tab-panel" data-tab-panel="transcript"><p class="rounded-xl bg-white p-5 leading-9 text-[var(--alm-muted)]">يتناول الشيخ معنى قوله تعالى: عم يتساءلون، ويفصل معنى النبأ العظيم، ثم يربط الآيات بقضية البعث والحساب.</p></div>
+            <div class="alm-tab-panel" data-tab-panel="attachments"><div class="grid gap-3 md:grid-cols-2"><a class="alm-card p-4" href="#">ملخص PDF</a><a class="alm-card p-4" href="#">خريطة ذهنية</a></div></div>
+            <div class="alm-tab-panel" data-tab-panel="comments"><div class="alm-card p-4"><b>سؤال طالب</b><p class="mt-1 text-sm text-[var(--alm-muted)]">ما الفرق بين النبأ والخبر؟</p></div></div>
+          </div>
+        </div>
+      </div>
+      <aside class="alm-panel p-5">
+        <h2 class="text-xl font-black">منهج الدرس</h2>
+        <div data-lessons class="mt-5 space-y-3"></div>
+        <div class="mt-5 grid grid-cols-2 gap-3">
+          <a class="alm-btn alm-btn-secondary" href="course-details.html">السابق</a>
+          <a class="alm-btn alm-btn-primary" href="quiz.html">التالي</a>
+        </div>
+      </aside>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'lesson', title:'مشغل الدرس', subtitle:'تفسير جزء عم'});</script>
+</body>
+</html>

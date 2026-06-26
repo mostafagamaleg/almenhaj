@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المتصدرون - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="leaderboard">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in">
+      <div class="alm-panel p-6">
+        <h1 class="text-3xl font-black">صفحة المتصدرين</h1>
+        <div class="mt-8 grid items-end gap-4 md:grid-cols-3">
+          <div class="alm-card p-6 text-center"><span class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[var(--alm-cream-100)] text-xl font-black">2</span><b class="mt-4 block">أحمد علي</b><p class="text-sm text-[var(--alm-muted)]">94,200 نقطة</p></div>
+          <div class="alm-card bg-[var(--alm-gold-300)] p-8 text-center"><span class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-white text-2xl font-black">1</span><b class="mt-4 block text-xl">محمد أحمد</b><p class="text-sm text-[var(--alm-muted)]">96,500 نقطة</p></div>
+          <div class="alm-card p-6 text-center"><span class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[var(--alm-cream-100)] text-xl font-black">3</span><b class="mt-4 block">عمر محمود</b><p class="text-sm text-[var(--alm-muted)]">93,800 نقطة</p></div>
+        </div>
+        <div class="mt-6 space-y-3" data-leaderboard></div>
+      </div>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'leaderboard', title:'المتصدرون', subtitle:'Leaderboard'});</script>
+</body>
+</html>

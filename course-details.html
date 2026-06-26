@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تفاصيل المسار - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="course">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in">
+      <div class="alm-panel overflow-hidden">
+        <div class="grid lg:grid-cols-[1fr_420px]">
+          <div class="p-7">
+            <span class="alm-badge gold">تفسير</span>
+            <h1 class="mt-4 text-4xl font-black">تفسير جزء عم</h1>
+            <p class="mt-4 max-w-2xl leading-8 text-[var(--alm-muted)]">مسار تعليمي متكامل لفهم سور جزء عم عبر فيديوهات، قراءة تفسيرية، واجبات تدبر، اختبارات، وشهادة إتمام.</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a href="lesson.html" class="alm-btn alm-btn-primary">متابعة التعلم</a>
+              <button class="alm-btn alm-btn-secondary" data-toast="تمت إضافة المسار إلى المفضلة">إضافة للمفضلة</button>
+            </div>
+          </div>
+          <div class="alm-hero-visual min-h-[320px] p-6 text-white">
+            <div class="alm-video h-full"><span class="alm-play"><i data-lucide="play" class="h-9 w-9 fill-current"></i></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5 grid gap-5 xl:grid-cols-[1fr_340px]">
+        <div class="alm-panel p-6">
+          <h2 class="text-2xl font-black">منهج المسار</h2>
+          <div data-lessons class="mt-5 space-y-3"></div>
+        </div>
+        <aside class="space-y-5">
+          <div class="alm-card p-5"><h3 class="font-black">معلومات المسار</h3><div class="mt-4 space-y-3 text-sm"><div class="flex justify-between"><span class="text-[var(--alm-muted)]">الدروس</span><b>33</b></div><div class="flex justify-between"><span class="text-[var(--alm-muted)]">المستوى</span><b>مبتدئ</b></div><div class="flex justify-between"><span class="text-[var(--alm-muted)]">الشهادة</span><b>متاحة</b></div></div></div>
+          <div class="alm-card p-5"><h3 class="font-black">المخرجات</h3><ul class="mt-4 space-y-2 text-sm text-[var(--alm-muted)]"><li>• فهم معاني سور جزء عم</li><li>• القدرة على التدبر والتطبيق</li><li>• اجتياز الاختبارات القصيرة</li></ul></div>
+        </aside>
+      </div>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'library', title:'تفاصيل المسار', subtitle:'تفسير جزء عم'});</script>
+</body>
+</html>

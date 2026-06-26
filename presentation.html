@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>المليون متدبّر — عرض تقديمي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --g950:#042a22; --g900:#063b30; --g800:#0a4d3f; --g700:#0f6b52; --g600:#15835f;
+  --cream:#fbf6ec; --cream2:#f0e6d5; --gold:#c59a45; --gold3:#ead8a3;
+  --ink:#172821; --muted:#69756f; --line:#e4d9c8; --white:#fffdf8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:Cairo,system-ui,sans-serif;color:var(--ink);background:#03211b;
+  overflow:hidden;
+}
+.font-q{font-family:Amiri,serif}
+
+/* deck */
+.deck{position:fixed;inset:0}
+.slide{
+  position:absolute;inset:0;display:none;
+  padding:6vh 7vw;flex-direction:column;
+  opacity:0;transition:opacity .45s ease, transform .45s ease;transform:translateY(14px);
+}
+.slide.active{display:flex;opacity:1;transform:translateY(0)}
+.slide.print{display:flex !important;opacity:1;transform:none}
+
+/* backgrounds */
+.bg-dark{background:
+  radial-gradient(circle at 12% 0%,rgba(197,154,69,.20),transparent 40%),
+  radial-gradient(circle at 90% 100%,rgba(15,107,82,.45),transparent 45%),
+  linear-gradient(140deg,var(--g950),var(--g800));color:#fff}
+.bg-light{background:
+  radial-gradient(circle at 92% 4%,rgba(197,154,69,.14),transparent 34%),
+  linear-gradient(135deg,#fcf8ef 0%,#f0e7d7 100%);color:var(--ink)}
+.bg-light .muted{color:var(--muted)}
+.bg-dark .muted{color:rgba(255,255,255,.72)}
+
+/* pattern motif */
+.pattern{position:absolute;inset:0;opacity:.10;pointer-events:none;
+  background-image:
+   linear-gradient(30deg,var(--gold) 12%,transparent 12.5%,transparent 87%,var(--gold) 87.5%),
+   linear-gradient(150deg,var(--gold) 12%,transparent 12.5%,transparent 87%,var(--gold) 87.5%);
+  background-size:46px 80px}
+
+/* typography */
+.kicker{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  padding:7px 14px;border-radius:999px;font-weight:800;font-size:clamp(11px,1.4vw,15px)}
+.bg-dark .kicker{background:rgba(234,216,163,.16);color:var(--gold3)}
+.bg-light .kicker{background:rgba(21,131,95,.10);color:var(--g800)}
+h1.title{font-size:clamp(34px,6.6vw,82px);font-weight:900;line-height:1.04;margin-top:3vh}
+h2.head{font-size:clamp(26px,4.6vw,52px);font-weight:900;line-height:1.1}
+.lead{font-size:clamp(15px,2vw,24px);line-height:1.7;max-width:60ch}
+.gold{color:var(--gold)}
+.goldl{color:#7a5516}
+
+/* logo */
+.brand{display:flex;align-items:center;gap:14px}
+.brand .mark{width:clamp(48px,5vw,64px);height:clamp(48px,5vw,64px);display:grid;place-items:center;
+  border-radius:18px;background:var(--g900);color:var(--gold3);border:1px solid rgba(255,255,255,.12)}
+.bg-light .brand .mark{background:var(--g800);color:var(--gold3)}
+
+/* layout helpers */
+.row{display:flex;gap:clamp(16px,3vw,40px)}
+.col{flex:1;min-width:0}
+.center{justify-content:center}
+.mt-auto{margin-top:auto}
+.grid{display:grid;gap:clamp(12px,1.6vw,22px)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+
+/* cards */
+.card{border-radius:18px;padding:clamp(16px,1.8vw,26px);backdrop-filter:blur(4px)}
+.bg-light .card{background:rgba(255,253,248,.94);border:1px solid var(--line);
+  box-shadow:0 14px 34px rgba(23,40,33,.08)}
+.bg-dark .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.card h3{font-size:clamp(16px,1.9vw,23px);font-weight:900;margin-bottom:6px}
+.card p{font-size:clamp(12px,1.35vw,16px);line-height:1.6}
+.ico{width:clamp(40px,4vw,54px);height:clamp(40px,4vw,54px);display:grid;place-items:center;
+  border-radius:14px;margin-bottom:12px}
+.bg-light .ico{background:rgba(197,154,69,.16);color:var(--goldl)}
+.bg-dark .ico{background:rgba(234,216,163,.16);color:var(--gold3)}
+
+/* stat */
+.stat .num{font-size:clamp(30px,4.6vw,60px);font-weight:900;line-height:1;color:var(--gold)}
+.bg-light .stat .num{color:var(--g700)}
+.stat .lbl{font-size:clamp(11px,1.3vw,15px);font-weight:700;margin-top:8px}
+
+/* step pill */
+.step{display:flex;gap:14px;align-items:flex-start}
+.step .n{flex:none;width:clamp(34px,3.6vw,46px);height:clamp(34px,3.6vw,46px);display:grid;place-items:center;
+  border-radius:999px;font-weight:900;background:var(--gold);color:var(--g950);font-size:clamp(14px,1.6vw,20px)}
+.step b{font-size:clamp(14px,1.7vw,20px);display:block}
+.step span{font-size:clamp(11px,1.3vw,15px)}
+
+/* progress + verse */
+.verse{border-radius:16px;padding:clamp(14px,1.6vw,22px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.bg-light .verse{background:#fff;border:1px solid var(--line)}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font-weight:800;
+  font-size:clamp(12px,1.4vw,16px);border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06)}
+.bg-light .chip{border:1px solid var(--line);background:#fff}
+
+/* mindmap mini */
+.mm{display:grid;place-items:center;gap:18px}
+.mm .core{width:clamp(90px,9vw,120px);height:clamp(90px,9vw,120px);display:grid;place-items:center;text-align:center;
+  border-radius:999px;background:var(--g800);color:#fff;font-weight:900;border:4px solid var(--gold3)}
+
+/* controls */
+.hud{position:fixed;bottom:22px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:14px;z-index:20}
+.nav{width:46px;height:46px;display:grid;place-items:center;border-radius:999px;cursor:pointer;
+  background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.22);transition:.15s}
+.nav:hover{background:var(--gold);color:var(--g950)}
+.counter{color:#fff;font-weight:800;font-size:14px;min-width:60px;text-align:center;
+  background:rgba(0,0,0,.3);padding:8px 14px;border-radius:999px}
+.bar{position:fixed;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,.12);z-index:20}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--g600),var(--gold));transition:width .4s ease}
+.hint{position:fixed;top:14px;left:18px;color:rgba(255,255,255,.6);font-size:12px;font-weight:700;z-index:20}
+
+@media print{
+  body{overflow:visible;background:#fff}
+  .hud,.bar,.hint{display:none}
+  .slide{position:relative;display:flex !important;opacity:1;transform:none;
+    page-break-after:always;height:100vh;width:100vw}
+}
+</style>
+</head>
+<body>
+<div class="bar"><span id="bar"></span></div>
+<div class="hint">← → أو المسافة للتنقّل · F ملء الشاشة · P للطباعة PDF</div>
+<div class="deck" id="deck">
+
+  <!-- 1 · COVER -->
+  <section class="slide bg-dark active">
+    <div class="pattern"></div>
+    <div class="brand">
+      <span class="mark"><i data-lucide="book-open-text" style="width:55%;height:55%"></i></span>
+      <span><b style="font-size:clamp(18px,2vw,24px)">المنهاج</b><br><span class="muted" style="font-size:13px">Alminhaj · منصة تعليمية إسلامية</span></span>
+    </div>
+    <div class="mt-auto"></div>
+    <span class="kicker"><i data-lucide="sparkles" style="width:16px"></i> منصة تعلّم القرآن تفسيراً وتدبّراً</span>
+    <h1 class="title">مشروع <span class="gold">المليون متدبّر</span></h1>
+    <p class="lead muted" style="margin-top:3vh">رحلة قرآنية تفاعلية: يختار الطالب السورة، يشاهد شرح الشيخ، يقرأ التفسير آية بآية، يتدبّر عبر خريطة ذهنية، ثم يختبر نفسه ويحصل على شهادة.</p>
+    <div class="row mt-auto" style="gap:14px;flex-wrap:wrap">
+      <span class="chip"><i data-lucide="users" style="width:16px"></i> 250,000 طالب</span>
+      <span class="chip"><i data-lucide="graduation-cap" style="width:16px"></i> 3,000 شيخ</span>
+      <span class="chip"><i data-lucide="book-marked" style="width:16px"></i> 114 سورة</span>
+      <span class="chip"><i data-lucide="map-pin" style="width:16px"></i> 27 محافظة</span>
+    </div>
+  </section>
+
+  <!-- 2 · PROBLEM / VISION -->
+  <section class="slide bg-light">
+    <span class="kicker"><i data-lucide="target" style="width:16px"></i> الرؤية</span>
+    <h2 class="head" style="margin-top:2vh">من التلقين إلى <span class="goldl">التدبّر والتطبيق</span></h2>
+    <div class="row" style="margin-top:4vh;align-items:stretch">
+      <div class="col card">
+        <div class="ico"><i data-lucide="circle-help"></i></div>
+        <h3>المشكلة</h3>
+        <p class="muted">كثير من المنصّات تعرض القرآن كنصٍّ يُحفظ فقط، دون فهمٍ منظّم، ولا تدبّر، ولا قياس حقيقي لمستوى الطالب.</p>
+      </div>
+      <div class="col card">
+        <div class="ico"><i data-lucide="route"></i></div>
+        <h3>الحل</h3>
+        <p class="muted">رحلة متدرّجة واضحة لكل سورة: شرح مرئي + تفسير آية بآية + خريطة ذهنية + تدبّر عملي + اختبار فوري + شهادة موثّقة.</p>
+      </div>
+      <div class="col card">
+        <div class="ico"><i data-lucide="trophy"></i></div>
+        <h3>الأثر</h3>
+        <p class="muted">جيلٌ يفهم كتاب الله ويعيش معانيه، مع تحفيز بالمسابقات والمتصدّرين على مستوى الجمهورية.</p>
+      </div>
+    </div>
+    <p class="lead mt-auto" style="font-style:italic;color:var(--g800)">«هدفنا أن نصل بمليون متدبّر إلى فهمٍ حيٍّ لكتاب الله.»</p>
+  </section>
+
+  <!-- 3 · JOURNEY 6 STEPS -->
+  <section class="slide bg-dark">
+    <div class="pattern"></div>
+    <span class="kicker"><i data-lucide="footprints" style="width:16px"></i> رحلة الطالب</span>
+    <h2 class="head" style="margin-top:2vh">ست خطوات من <span class="gold">السورة إلى الشهادة</span></h2>
+    <div class="grid g3" style="margin-top:4vh">
+      <div class="card step"><span class="n">١</span><div><b>الدخول للمسار</b><span class="muted">يفتح الطالب «تفسير جزء عمّ» من رحلته القرآنية</span></div></div>
+      <div class="card step"><span class="n">٢</span><div><b>اختيار السورة</b><span class="muted">يختار السورة التي يريد تفسيرها من الشبكة</span></div></div>
+      <div class="card step"><span class="n">٣</span><div><b>شرح الشيخ</b><span class="muted">يشاهد فيديو الشيخ الذي يشرح السورة</span></div></div>
+      <div class="card step"><span class="n">٤</span><div><b>التفسير آية بآية</b><span class="muted">يقرأ الآية بجانب تفسيرها مع حفظ الملاحظات</span></div></div>
+      <div class="card step"><span class="n">٥</span><div><b>الاختبار</b><span class="muted">يختبر نفسه على السورة بمؤقّت وتصحيح فوري</span></div></div>
+      <div class="card step"><span class="n">٦</span><div><b>النتيجة والمتابعة</b><span class="muted">يرى نتيجته ويتابع الدرس التالي أو يأخذ الشهادة</span></div></div>
+    </div>
+  </section>
+
+  <!-- 4 · TAFSIR -->
+  <section class="slide bg-light">
+    <div class="row" style="align-items:center;height:100%">
+      <div class="col">
+        <span class="kicker"><i data-lucide="book-open" style="width:16px"></i> التفسير التفاعلي</span>
+        <h2 class="head" style="margin-top:2vh">الآية <span class="goldl">بجانب تفسيرها</span></h2>
+        <p class="lead muted" style="margin-top:3vh">قائمة آيات السورة على الجانب، والضغط على أي آية يعرض نصّها القرآني وتفسيرها الميسّر، مع إمكانية حفظ الملاحظات والانتقال للآية التالية.</p>
+        <div class="grid g2" style="margin-top:3vh">
+          <span class="chip"><i data-lucide="list" style="width:16px"></i> تنقّل بين الآيات</span>
+          <span class="chip"><i data-lucide="bookmark" style="width:16px"></i> حفظ الملاحظات</span>
+          <span class="chip"><i data-lucide="copy" style="width:16px"></i> نسخ الآية</span>
+          <span class="chip"><i data-lucide="git-fork" style="width:16px"></i> ربط بالخريطة</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="verse">
+          <span class="chip" style="margin-bottom:14px">سورة النبأ · الآية ٢</span>
+          <h3 class="font-q gold" style="font-size:clamp(26px,3.6vw,44px);line-height:1.8">عَنِ النَّبَإِ الْعَظِيمِ</h3>
+          <div class="card" style="margin-top:16px;background:#fff">
+            <b class="goldl">التفسير</b>
+            <p class="muted" style="margin-top:8px;line-height:1.8">عن الخبر الجليل الهائل الذي شأنه عظيم، وهو خبر البعث بعد الموت يوم القيامة، الذي اختلف فيه المكذّبون.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · MINDMAP -->
+  <section class="slide bg-dark">
+    <div class="pattern"></div>
+    <span class="kicker"><i data-lucide="git-fork" style="width:16px"></i> الخريطة الذهنية</span>
+    <h2 class="head" style="margin-top:2vh">تدبّرٌ يربط <span class="gold">محاور السورة</span></h2>
+    <div class="row" style="margin-top:3vh;align-items:center">
+      <div style="flex:none" class="mm">
+        <div class="core">سورة<br>النبأ</div>
+      </div>
+      <div class="col grid g2">
+        <div class="card"><h3 class="gold">إثبات البعث</h3><p class="muted">النبأ العظيم · اختلاف الناس · كلا سيعلمون</p></div>
+        <div class="card"><h3 class="gold">دلائل القدرة</h3><p class="muted">الأرض مهاداً · الجبال أوتاداً · الليل والنهار</p></div>
+        <div class="card"><h3 class="gold">مشهد القيامة</h3><p class="muted">يوم الفصل · نفخ الصور · تسيير الجبال</p></div>
+        <div class="card"><h3 class="gold">جزاء الفريقين</h3><p class="muted">جهنم للطاغين · مفازاً للمتقين · حدائق وأعناباً</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · QUIZ + RESULT -->
+  <section class="slide bg-light">
+    <span class="kicker"><i data-lucide="circle-help" style="width:16px"></i> الاختبار التفاعلي</span>
+    <h2 class="head" style="margin-top:2vh">قِس فهمك <span class="goldl">لحظياً</span></h2>
+    <div class="row" style="margin-top:4vh;align-items:stretch">
+      <div class="col card">
+        <div class="ico"><i data-lucide="timer"></i></div>
+        <h3>محرّك أسئلة حيّ</h3>
+        <p class="muted">10 أسئلة بمؤقّت تنازلي، اختيار الإجابة بالضغط، تنقّل سابق/تالي، وعدّاد للإجابات.</p>
+      </div>
+      <div class="col card">
+        <div class="ico"><i data-lucide="check-check"></i></div>
+        <h3>تصحيح فوري</h3>
+        <p class="muted">يُحتسب عدد الصحيح والخطأ والنسبة المئوية والوقت المستغرق تلقائياً عند الإنهاء.</p>
+      </div>
+      <div class="col card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+        <div style="width:clamp(110px,11vw,150px);height:clamp(110px,11vw,150px);display:grid;place-items:center;border-radius:999px;border:10px solid var(--gold);background:var(--g950);color:#fff">
+          <div><span class="gold" style="font-weight:800;font-size:13px">نتيجة ممتازة</span><br><b style="font-size:clamp(26px,3.4vw,40px)">8 / 10</b></div>
+        </div>
+        <p class="muted" style="margin-top:12px;font-weight:700">شهادة + متابعة الدرس التالي</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · DASHBOARDS -->
+  <section class="slide bg-dark">
+    <div class="pattern"></div>
+    <span class="kicker"><i data-lucide="layout-dashboard" style="width:16px"></i> لوحات التحكم</span>
+    <h2 class="head" style="margin-top:2vh">لكل دورٍ <span class="gold">لوحته</span></h2>
+    <div class="grid g3" style="margin-top:4vh">
+      <div class="card">
+        <div class="ico"><i data-lucide="graduation-cap"></i></div>
+        <h3>الطالب</h3>
+        <p class="muted">التقدّم، الرحلة القرآنية، النقاط والترتيب، النشاط الأخير، الشهادات، ونقاط القوة والضعف.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><i data-lucide="presentation"></i></div>
+        <h3>الشيخ</h3>
+        <p class="muted">عدد الطلاب، متوسط النجاح، التقييم، أفضل الطلاب والمتعثّرون، ونشر الدروس.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><i data-lucide="shield-check"></i></div>
+        <h3>الإدارة</h3>
+        <p class="muted">الإحصائيات الحية، أداء المحافظات، المتصدّرون، إدارة المستخدمين والتقارير.</p>
+      </div>
+    </div>
+    <p class="lead mt-auto muted">واجهة موحّدة بشريط جانبي ذكي، بحث، تبديل عربي/إنجليزي، ووضع متجاوب للموبايل.</p>
+  </section>
+
+  <!-- 8 · NUMBERS -->
+  <section class="slide bg-light">
+    <span class="kicker"><i data-lucide="bar-chart-3" style="width:16px"></i> المنصّة بالأرقام</span>
+    <h2 class="head" style="margin-top:2vh">حجمٌ على مستوى <span class="goldl">الجمهورية</span></h2>
+    <div class="grid g4" style="margin-top:5vh">
+      <div class="card stat"><div class="num">250K</div><div class="lbl muted">طالب وطالبة</div></div>
+      <div class="card stat"><div class="num">3,000</div><div class="lbl muted">شيخ ومعلّم</div></div>
+      <div class="card stat"><div class="num">114</div><div class="lbl muted">سورة</div></div>
+      <div class="card stat"><div class="num">100K</div><div class="lbl muted">سؤال</div></div>
+    </div>
+    <div class="grid g4" style="margin-top:3vh">
+      <div class="card stat"><div class="num">18,500</div><div class="lbl muted">يشاهدون الآن</div></div>
+      <div class="card stat"><div class="num">7,200</div><div class="lbl muted">أتمّوا درساً اليوم</div></div>
+      <div class="card stat"><div class="num">1,300</div><div class="lbl muted">اجتازوا مرحلة</div></div>
+      <div class="card stat"><div class="num">27</div><div class="lbl muted">محافظة</div></div>
+    </div>
+  </section>
+
+  <!-- 9 · TECH -->
+  <section class="slide bg-dark">
+    <div class="pattern"></div>
+    <span class="kicker"><i data-lucide="cpu" style="width:16px"></i> التقنية ونظام التصميم</span>
+    <h2 class="head" style="margin-top:2vh">منتجٌ كامل <span class="gold">لا قالب</span></h2>
+    <div class="grid g4" style="margin-top:4vh">
+      <div class="card"><div class="ico"><i data-lucide="languages"></i></div><h3>عربي / إنجليزي</h3><p class="muted">دعم RTL/LTR وتبديل فوري للّغة.</p></div>
+      <div class="card"><div class="ico"><i data-lucide="smartphone"></i></div><h3>متجاوب</h3><p class="muted">يعمل على الجوال واللوحي والحاسب.</p></div>
+      <div class="card"><div class="ico"><i data-lucide="accessibility"></i></div><h3>سهولة الوصول</h3><p class="muted">تباين واضح وتنقّل بلوحة المفاتيح.</p></div>
+      <div class="card"><div class="ico"><i data-lucide="component"></i></div><h3>مكوّنات قابلة لإعادة الاستخدام</h3><p class="muted">كروت، تبويبات، مودال، توست، اختبارات.</p></div>
+    </div>
+    <div class="row mt-auto" style="flex-wrap:wrap;gap:12px">
+      <span class="chip">HTML5</span><span class="chip">Tailwind CSS</span><span class="chip">JavaScript تفاعلي</span>
+      <span class="chip">Lucide Icons</span><span class="chip">خطوط Cairo / Amiri</span><span class="chip">localStorage للنتائج</span>
+    </div>
+  </section>
+
+  <!-- 10 · ROADMAP -->
+  <section class="slide bg-light">
+    <span class="kicker"><i data-lucide="milestone" style="width:16px"></i> خارطة الطريق</span>
+    <h2 class="head" style="margin-top:2vh">من النموذج إلى <span class="goldl">المنتج الحيّ</span></h2>
+    <div class="grid g3" style="margin-top:4vh">
+      <div class="card"><span class="chip" style="margin-bottom:12px">المرحلة 1 · جاهزة</span><h3>الواجهة التفاعلية</h3><p class="muted">رحلة جزء عمّ، التفسير، الاختبار، اللوحات، والشهادات.</p></div>
+      <div class="card"><span class="chip" style="margin-bottom:12px">المرحلة 2</span><h3>الباك-إند والحسابات</h3><p class="muted">تسجيل دخول حقيقي، حفظ التقدّم، فيديوهات، وقاعدة بيانات.</p></div>
+      <div class="card"><span class="chip" style="margin-bottom:12px">المرحلة 3</span><h3>التوسّع</h3><p class="muted">بقية الأجزاء، تطبيق جوال، وذكاء اصطناعي للتوصيات.</p></div>
+    </div>
+    <p class="lead mt-auto" style="font-style:italic;color:var(--g800)">الأساس البصري والتفاعلي جاهز — والخطوة التالية ربطه بخادمٍ حقيقي.</p>
+  </section>
+
+  <!-- 11 · CLOSING -->
+  <section class="slide bg-dark center" style="align-items:center;text-align:center">
+    <div class="pattern"></div>
+    <span class="mark" style="width:72px;height:72px"><i data-lucide="book-open-text" style="width:55%;height:55%"></i></span>
+    <h1 class="title" style="margin-top:3vh">ابدأ رحلتك مع <span class="gold">القرآن</span></h1>
+    <p class="lead muted" style="margin-top:3vh;text-align:center">مشروع المليون متدبّر — منصّة المنهاج التعليمية</p>
+    <div class="row" style="margin-top:4vh;gap:14px;flex-wrap:wrap;justify-content:center">
+      <span class="chip"><i data-lucide="globe" style="width:16px"></i> index.html</span>
+      <span class="chip"><i data-lucide="mail" style="width:16px"></i> mostafagamal.eg4@gmail.com</span>
+    </div>
+    <p class="muted mt-auto" style="font-size:13px">© 2026 المنهاج · Alminhaj LMS</p>
+  </section>
+
+</div>
+
+<div class="hud">
+  <div class="nav" id="prev"><i data-lucide="chevron-right"></i></div>
+  <div class="counter"><span id="cur">1</span> / <span id="tot">11</span></div>
+  <div class="nav" id="next"><i data-lucide="chevron-left"></i></div>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const cur=document.getElementById('cur'),bar=document.getElementById('bar');
+  document.getElementById('tot').textContent=slides.length;
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    cur.textContent=i+1;
+    bar.style.width=((i+1)/slides.length*100)+'%';
+  }
+  document.getElementById('next').onclick=()=>show(i+1);
+  document.getElementById('prev').onclick=()=>show(i-1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'||e.key===' '||e.key==='PageDown')show(i+1);
+    else if(e.key==='ArrowRight'||e.key==='PageUp')show(i-1);
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='f'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}
+    else if(e.key.toLowerCase()==='p')window.print();
+  });
+  show(0);
+  if(window.lucide)lucide.createIcons();
+</script>
+</body>
+</html>

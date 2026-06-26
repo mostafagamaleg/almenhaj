@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الشهادات - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="certificates">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in grid gap-5 xl:grid-cols-[1fr_340px]">
+      <div class="alm-certificate p-8 text-center md:p-12">
+        <p class="font-quran text-2xl text-[var(--alm-gold-500)]">شهادة إتمام مرحلة</p>
+        <h1 class="mt-4 text-5xl font-black">جزء عم</h1>
+        <p class="mx-auto mt-6 max-w-2xl leading-8 text-[var(--alm-muted)]">تشهد منصة المنهاج بأن الطالب</p>
+        <h2 class="mt-2 text-3xl font-black text-[var(--alm-green-800)]">محمود أحمد محمد</h2>
+        <p class="mx-auto mt-6 max-w-2xl leading-9 text-[var(--alm-muted)]">قد أكمل بنجاح مرحلة تفسير جزء عم ضمن مشروع متدبر القرآن بإشراف نخبة من أهل العلم.</p>
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-10 text-sm text-[var(--alm-muted)]">
+          <div><b class="block text-[var(--alm-ink)]">2026/06/15</b>تاريخ الإصدار</div>
+          <div class="grid h-24 w-24 place-items-center rounded-2xl border border-[var(--alm-line)] bg-white"><i data-lucide="qr-code" class="h-12 w-12 text-[var(--alm-green-800)]"></i></div>
+          <div><b class="block text-[var(--alm-ink)]">ALM-JUZ-2026</b>رقم الشهادة</div>
+        </div>
+      </div>
+      <aside class="space-y-4">
+        <div class="alm-panel p-5">
+          <h2 class="text-xl font-black">شهاداتي</h2>
+          <div class="mt-4 space-y-3">
+            <div class="rounded-xl bg-white p-4"><b>جزء عم</b><span class="block text-sm text-[var(--alm-muted)]">مكتملة</span></div>
+            <div class="rounded-xl bg-white p-4"><b>سورة الملك</b><span class="block text-sm text-[var(--alm-muted)]">قيد المراجعة</span></div>
+            <div class="rounded-xl bg-white p-4"><b>فقه العبادات</b><span class="block text-sm text-[var(--alm-muted)]">42% مكتمل</span></div>
+          </div>
+        </div>
+        <button class="alm-btn alm-btn-primary w-full" data-toast="سيتم تحميل ملف PDF">تحميل PDF</button>
+        <button class="alm-btn alm-btn-secondary w-full" data-toast="تم نسخ رابط المشاركة">مشاركة الشهادة</button>
+      </aside>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'certificates', title:'الشهادات', subtitle:'Certificates'});</script>
+</body>
+</html>

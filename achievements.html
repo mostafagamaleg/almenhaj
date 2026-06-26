@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الإنجازات - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="achievements">
+  <div class="alm-shell" data-layout="app"></div>
+  <template data-page-content>
+    <section class="alm-fade-in">
+      <div class="grid gap-5 lg:grid-cols-[320px_1fr]">
+        <div class="alm-panel p-6 text-center"><div class="alm-ring mx-auto" style="--value:72"><span>72%</span></div><h1 class="mt-5 text-2xl font-black">نقاط القوة والضعف</h1><p class="mt-2 text-[var(--alm-muted)]">تحليل أدائك في الاختبارات والدروس.</p></div>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="alm-panel p-5"><h2 class="text-xl font-black">نقاط القوة</h2><ul class="mt-4 space-y-2 text-[var(--alm-muted)]"><li>✓ العقيدة</li><li>✓ أحكام التلاوة</li><li>✓ مراجعة الدروس</li></ul></div>
+          <div class="alm-panel p-5"><h2 class="text-xl font-black">تحتاج مراجعة</h2><ul class="mt-4 space-y-2 text-[var(--alm-muted)]"><li>• معاني الكلمات</li><li>• المتشابهات</li><li>• أسباب النزول</li></ul></div>
+          <div class="alm-card p-5"><i data-lucide="trophy" class="h-8 w-8 text-[var(--alm-gold-500)]"></i><b class="mt-4 block">مداوم 12 يوماً</b></div>
+          <div class="alm-card p-5"><i data-lucide="star" class="h-8 w-8 text-[var(--alm-gold-500)]"></i><b class="mt-4 block">3250 نقطة علمية</b></div>
+        </div>
+      </div>
+    </section>
+  </template>
+  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
+  <script>Alminhaj.initPage({active:'achievements', title:'الإنجازات', subtitle:'Gamification'});</script>
+</body>
+</html>

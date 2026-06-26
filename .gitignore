@@ -1,0 +1,17 @@
+# نظام
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# محرّرات
+.vscode/
+.idea/
+
+# سجلّات ومؤقّت
+*.log
+node_modules/
+dist/
+.cache/
+
+# مجلد العوامل
+.agents/

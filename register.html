@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إنشاء حساب - المنهاج</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+  <main class="min-h-screen px-4 py-8">
+    <div class="mx-auto max-w-5xl">
+      <a href="index.html" class="mb-6 flex items-center gap-3">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-[var(--alm-green-900)] text-[var(--alm-gold-300)]"><i data-lucide="book-open-text"></i></span>
+        <b class="text-xl">المنهاج</b>
+      </a>
+      <div class="alm-panel grid overflow-hidden lg:grid-cols-[.9fr_1.1fr]">
+        <div class="alm-hero-visual p-8 text-white">
+          <span class="alm-badge gold">Start learning</span>
+          <h1 class="mt-6 text-4xl font-black leading-tight">انضم إلى رحلة علمية منظمة</h1>
+          <p class="mt-4 leading-8 text-white/75">حساب واحد للوصول إلى القرآن، التفسير، الفقه، الاختبارات، الشهادات، ولوحة التقدم.</p>
+          <div class="mt-8 grid gap-3">
+            <div class="rounded-xl bg-white/10 p-4"><b>مسارات منظمة</b><p class="text-sm text-white/65">تعلم خطوة بخطوة.</p></div>
+            <div class="rounded-xl bg-white/10 p-4"><b>شهادات موثقة</b><p class="text-sm text-white/65">لكل مرحلة مكتملة.</p></div>
+          </div>
+        </div>
+        <form class="p-6 md:p-8" action="student.html">
+          <span class="alm-badge">إنشاء حساب</span>
+          <h2 class="mt-4 text-3xl font-black">بيانات التسجيل</h2>
+          <div class="mt-6 grid gap-4 md:grid-cols-2">
+            <label class="block"><span class="text-sm font-extrabold">الاسم الكامل</span><input class="alm-input mt-2" value="محمود أحمد" /></label>
+            <label class="block"><span class="text-sm font-extrabold">نوع الحساب</span><select class="alm-input mt-2"><option>طالب</option><option>معلم</option><option>أكاديمية</option></select></label>
+            <label class="block"><span class="text-sm font-extrabold">البريد الإلكتروني</span><input class="alm-input mt-2" type="email" /></label>
+            <label class="block"><span class="text-sm font-extrabold">رقم الهاتف</span><input class="alm-input mt-2" /></label>
+            <label class="block"><span class="text-sm font-extrabold">كلمة المرور</span><input class="alm-input mt-2" type="password" /></label>
+            <label class="block"><span class="text-sm font-extrabold">اللغة المفضلة</span><select class="alm-input mt-2"><option>العربية</option><option>English</option></select></label>
+          </div>
+          <label class="mt-5 flex items-start gap-2 text-sm text-[var(--alm-muted)]"><input class="mt-1" type="checkbox" checked /> أوافق على سياسة الاستخدام والخصوصية.</label>
+          <button class="alm-btn alm-btn-primary mt-6 w-full" type="submit">إنشاء الحساب</button>
+          <p class="mt-5 text-center text-sm text-[var(--alm-muted)]">لديك حساب بالفعل؟ <a class="font-black text-[var(--alm-green-800)]" href="login.html">تسجيل الدخول</a></p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
