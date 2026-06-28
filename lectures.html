@@ -3,33 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>رفع محاضرة - المنهاج</title>
+  <title>المحاضرات - المنهاج</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
-<body data-page="upload">
+<body data-page="lectures">
   <div class="alm-shell" data-layout="app"></div>
   <template data-page-content>
     <section class="alm-fade-in">
-      <div class="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
-        <div>
-          <span class="alm-badge gold">Upload Center</span>
-          <h1 class="mt-2 text-3xl font-black">رفع محاضرة جديدة</h1>
-          <p class="mt-1 text-sm text-[var(--alm-muted)]">فيديو يوتيوب أو ملف محلي + مرفقات + بيانات المحاضرة.</p>
-        </div>
-        <a class="alm-btn alm-btn-secondary" href="lectures.html">
-          <i data-lucide="arrow-right" class="h-5 w-5"></i> عرض كل المحاضرات
-        </a>
-      </div>
-      <div data-lecture-upload></div>
+      <div data-lectures-page></div>
     </section>
   </template>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/navigation.js"></script>
-  <script>Alminhaj.initPage({ active: 'upload', title: 'رفع محاضرة', subtitle: 'مركز الرفع' });</script>
+  <script>Alminhaj.initPage({ active: 'lectures', title: 'المحاضرات', subtitle: 'تصفّح وشاهد' });</script>
 </body>
 </html>

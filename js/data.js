@@ -128,6 +128,110 @@ window.AlminhajData = {
     { title: 'حصلت على 8/10 في اختبار سورة الملك', time: 'أمس', icon: 'badge-check' },
     { title: 'تم إصدار شهادة جزء عم', time: '15 يونيو 2026', icon: 'award' }
   ],
+  // ===== فئات المحاضرات =====
+  lectureCategories: [
+    { id: 'basics',            name: 'الأساسيات',              icon: 'layers',        color: '#0a4d3f', desc: 'المقدّمات والأسس العلمية للمنهج' },
+    { id: 'tafsir-teacher',    name: 'معلم التفسير',            icon: 'user-round',    color: '#0f6b52', desc: 'منهجية تأهيل المعلّمين والشيوخ' },
+    { id: 'tafsir-principles', name: 'أصول التفسير',            icon: 'book-open',     color: '#15835f', desc: 'قواعد وأسس علم التفسير' },
+    { id: 'tafsir-material',   name: 'مادة التفسير',            icon: 'book-marked',   color: '#c59a45', desc: 'المحتوى التفصيلي لمواد التفسير' },
+    { id: 'juz-amma',          name: 'جزء عمّ',                 icon: 'scroll-text',   color: '#063b30', desc: 'تفسير وتدبّر سور الجزء الثلاثين' },
+    { id: 'arabic-grammar',    name: 'قواعد اللغة العربية',     icon: 'pen-line',      color: '#0a4d3f', desc: 'النحو والصرف والبلاغة لفهم القرآن' },
+    { id: 'fiqh',              name: 'الفقه',                   icon: 'scale',         color: '#0f6b52', desc: 'أحكام العبادات والمعاملات' },
+  ],
+
+  // ===== المحاضرات (بيانات ديناميكية) =====
+  lectures: [
+    {
+      id: 'lec-001', category: 'juz-amma',
+      type: 'series', seriesName: 'سلسلة تفسير جزء عمّ', seriesOrder: 1,
+      title: 'مقدّمة في تفسير جزء عمّ',
+      description: 'نظرة عامة على جزء عمّ ومنهجية دراسته تفسيراً وتدبّراً.',
+      videoType: 'youtube', youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', duration: '26:40',
+      instructor: 'د. محمد الطيب', students: 3200, status: 'published', publishedAt: '2026-06-01',
+      attachments: [
+        { name: 'ملخص المقدّمة.pdf', type: 'pdf', size: '1.8MB' },
+        { name: 'خريطة ذهنية جزء عمّ.png', type: 'image', size: '520KB' },
+      ]
+    },
+    {
+      id: 'lec-002', category: 'juz-amma',
+      type: 'series', seriesName: 'سلسلة تفسير جزء عمّ', seriesOrder: 2,
+      title: 'تفسير سورة النبأ',
+      description: 'شرح تفصيلي لسورة النبأ آية بآية مع التدبّر والتطبيق.',
+      videoType: 'youtube', youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', duration: '48:15',
+      instructor: 'د. محمد الطيب', students: 2850, status: 'published', publishedAt: '2026-06-08',
+      attachments: [
+        { name: 'تفسير سورة النبأ.pdf', type: 'pdf', size: '3.2MB' },
+      ]
+    },
+    {
+      id: 'lec-003', category: 'tafsir-principles',
+      type: 'single', seriesName: '', seriesOrder: 0,
+      title: 'مفهوم التفسير وأهمّيته',
+      description: 'تعريف التفسير لغةً واصطلاحاً، وبيان أهمّيته وشرف هذا العلم.',
+      videoType: 'youtube', youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', duration: '34:20',
+      instructor: 'الشيخ أحمد سالم', students: 1900, status: 'published', publishedAt: '2026-06-10',
+      attachments: [
+        { name: 'مفهوم التفسير.pdf', type: 'pdf', size: '2.1MB' },
+        { name: 'أسئلة مراجعة.pdf', type: 'pdf', size: '800KB' },
+      ]
+    },
+    {
+      id: 'lec-004', category: 'arabic-grammar',
+      type: 'series', seriesName: 'سلسلة النحو لفهم القرآن', seriesOrder: 1,
+      title: 'الجملة الاسمية والفعلية',
+      description: 'قواعد الجملة الاسمية والفعلية وأثرها في فهم معاني القرآن الكريم.',
+      videoType: 'local', youtubeUrl: '', duration: '41:05',
+      instructor: 'أ. مريم خالد', students: 1450, status: 'published', publishedAt: '2026-06-15',
+      attachments: [
+        { name: 'أوراق عمل النحو.pdf', type: 'pdf', size: '1.5MB' },
+      ]
+    },
+    {
+      id: 'lec-005', category: 'fiqh',
+      type: 'series', seriesName: 'سلسلة فقه العبادات', seriesOrder: 1,
+      title: 'أحكام الطهارة',
+      description: 'شرح مفصّل لأحكام الطهارة بأسلوب ميسّر مع أمثلة تطبيقية.',
+      videoType: 'youtube', youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', duration: '52:30',
+      instructor: 'أ. يوسف عمر', students: 2100, status: 'published', publishedAt: '2026-06-18',
+      attachments: [
+        { name: 'ملخّص أحكام الطهارة.pdf', type: 'pdf', size: '2.4MB' },
+        { name: 'جدول الأحكام.png', type: 'image', size: '340KB' },
+      ]
+    },
+    {
+      id: 'lec-006', category: 'basics',
+      type: 'single', seriesName: '', seriesOrder: 0,
+      title: 'كيف تستعدّ لرحلة التدبّر',
+      description: 'مقدّمة للمبتدئين حول أسلوب التدبّر وأهدافه والمنهج الصحيح للبداية.',
+      videoType: 'youtube', youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', duration: '22:10',
+      instructor: 'د. محمد الطيب', students: 4100, status: 'published', publishedAt: '2026-06-20',
+      attachments: []
+    },
+    {
+      id: 'lec-007', category: 'tafsir-teacher',
+      type: 'series', seriesName: 'برنامج تأهيل معلّم التفسير', seriesOrder: 1,
+      title: 'مواصفات معلّم التفسير الناجح',
+      description: 'الصفات العلمية والتربوية التي يجب أن يتحلّى بها معلّم القرآن الكريم.',
+      videoType: 'youtube', youtubeUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', duration: '38:45',
+      instructor: 'الشيخ أحمد سالم', students: 870, status: 'review', publishedAt: '2026-06-24',
+      attachments: [
+        { name: 'دليل معلّم التفسير.pdf', type: 'pdf', size: '4.2MB' },
+      ]
+    },
+    {
+      id: 'lec-008', category: 'tafsir-material',
+      type: 'series', seriesName: 'سلسلة مادة التفسير', seriesOrder: 1,
+      title: 'المصادر الأساسية لمادة التفسير',
+      description: 'استعراض أهمّ كتب التفسير ومراجعه وطريقة الاستفادة منها.',
+      videoType: 'local', youtubeUrl: '', duration: '45:00',
+      instructor: 'د. عبد الرحمن سالم', students: 0, status: 'draft', publishedAt: '',
+      attachments: [
+        { name: 'قائمة المصادر.pdf', type: 'pdf', size: '1.1MB' },
+      ]
+    },
+  ],
+
   notifications: [
     { title: 'موعد اختبار سورة النازعات غداً', body: 'راجع الآيات 1-20 قبل الاختبار.', type: 'quiz' },
     { title: 'تعليق جديد من الشيخ', body: 'تمت مراجعة واجب التدبر الأخير.', type: 'teacher' },

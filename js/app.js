@@ -2,6 +2,8 @@ const Alminhaj = (() => {
   const data = window.AlminhajData || {};
 
   const pageMap = {
+    lectures: 'lectures.html',
+    upload: 'upload.html',
     landing: 'index.html',
     login: 'login.html',
     register: 'register.html',
@@ -30,19 +32,20 @@ const Alminhaj = (() => {
   };
 
   const navItems = [
-    ['student', 'لوحة الطالب', 'layout-dashboard'],
-    ['library', 'المكتبة', 'library'],
-    ['lesson', 'مشغل الدرس', 'square-play'],
-    ['quiz', 'الاختبارات', 'circle-help'],
-    ['quran', 'المصحف', 'book-open-text'],
-    ['assignments', 'الواجبات', 'clipboard-check'],
-    ['achievements', 'الإنجازات', 'trophy'],
-    ['certificates', 'الشهادات', 'award'],
-    ['leaderboard', 'المتصدرون', 'trophy'],
-    ['teacher', 'لوحة الشيخ', 'users-round'],
-    ['admin', 'الإدارة', 'shield-check'],
-    ['reports', 'التقارير', 'chart-column'],
-    ['settings', 'الإعدادات', 'settings']
+    ['student',   'لوحة الطالب',         'layout-dashboard'],
+    ['lectures',  'المحاضرات',            'video'],
+    ['library',   'المسارات',             'library'],
+    ['quiz',      'الاختبارات',           'circle-help'],
+    ['quran',     'المصحف والتفسير',      'book-open-text'],
+    ['assignments','الواجبات',            'clipboard-check'],
+    ['achievements','الإنجازات',          'trophy'],
+    ['certificates','الشهادات',           'award'],
+    ['leaderboard','المتصدّرون',          'bar-chart-3'],
+    ['teacher',   'لوحة الشيخ',          'presentation'],
+    ['upload',    'رفع محاضرة',           'upload-cloud'],
+    ['admin',     'الإدارة',              'shield-check'],
+    ['reports',   'التقارير',             'chart-column'],
+    ['settings',  'الإعدادات',            'settings'],
   ];
 
   function icon(name, cls = 'h-5 w-5') {
@@ -615,6 +618,306 @@ const Alminhaj = (() => {
     });
   }
 
+  /* ============== صفحة تصفّح المحاضرات ============== */
+  function initLecturesPage(selector = '[data-lectures-page]') {
+    const root = document.querySelector(selector);
+    const cats = data.lectureCategories || [];
+    const lectures = data.lectures || [];
+    if (!root) return;
+
+    function ytThumb(url) {
+      const m = url.match(/embed\/([\w-]+)/);
+      return m ? `https://img.youtube.com/vi/${m[1]}/mqdefault.jpg` : '';
+    }
+
+    function statusBadge(s) {
+      const map = { published: ['منشور', 'text-[var(--alm-success)]'], review: ['قيد المراجعة', 'text-[var(--alm-warning)]'], draft: ['مسودة', 'text-[var(--alm-muted)]'] };
+      const [l, c] = map[s] || map.draft;
+      return `<span class="text-xs font-bold ${c}">${l}</span>`;
+    }
+
+    function lectureCard(lec) {
+      const thumb = lec.videoType === 'youtube' ? ytThumb(lec.youtubeUrl) : '';
+      const typeLabel = lec.type === 'series' ? `سلسلة · ${lec.seriesName} #${lec.seriesOrder}` : 'محاضرة مستقلّة';
+      const srcIcon = lec.videoType === 'youtube'
+        ? `<span class="flex items-center gap-1 text-[#ff0000] text-xs font-bold">${icon('youtube', 'h-4 w-4')} يوتيوب</span>`
+        : `<span class="flex items-center gap-1 text-[var(--alm-muted)] text-xs font-bold">${icon('hard-drive', 'h-4 w-4')} ملف محلي</span>`;
+      const attCount = lec.attachments?.length || 0;
+      return `
+        <article class="alm-card flex flex-col overflow-hidden transition hover:-translate-y-1">
+          <div class="relative ${thumb ? '' : 'alm-video'} min-h-[160px] bg-[var(--alm-green-900)]" style="${thumb ? `background:url('${thumb}') center/cover no-repeat` : ''}">
+            ${!thumb ? `<span class="alm-play"><i data-lucide="play" class="h-8 w-8 fill-current"></i></span>` : `<span class="absolute inset-0 flex items-center justify-center"><span class="alm-play"><i data-lucide="play" class="h-8 w-8 fill-current"></i></span></span>`}
+            <span class="absolute bottom-2 end-2 rounded-lg bg-black/70 px-2 py-1 text-xs font-bold text-white">${lec.duration}</span>
+            ${srcIcon ? `<span class="absolute top-2 start-2 rounded-lg bg-white/90 px-2 py-1">${srcIcon}</span>` : ''}
+          </div>
+          <div class="flex flex-1 flex-col p-4">
+            <span class="text-xs font-bold text-[var(--alm-muted)]">${typeLabel}</span>
+            <h3 class="mt-1 text-base font-black leading-6">${lec.title}</h3>
+            <p class="mt-1 text-xs leading-5 text-[var(--alm-muted)] line-clamp-2">${lec.description}</p>
+            <div class="mt-3 flex flex-wrap items-center gap-2">
+              ${statusBadge(lec.status)}
+              ${attCount ? `<span class="flex items-center gap-1 text-xs text-[var(--alm-muted)]">${icon('paperclip','h-3.5 w-3.5')} ${attCount} مرفق</span>` : ''}
+              <span class="flex items-center gap-1 text-xs text-[var(--alm-muted)]">${icon('users','h-3.5 w-3.5')} ${lec.students.toLocaleString('ar-EG')}</span>
+            </div>
+            <div class="mt-3 flex items-center justify-between gap-2 border-t border-[var(--alm-line)] pt-3">
+              <span class="text-xs font-bold text-[var(--alm-muted)]">${lec.instructor}</span>
+              <a href="lesson.html" class="alm-btn alm-btn-primary !min-h-8 !px-3 !text-xs">مشاهدة</a>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function render(catId = 'all') {
+      const filtered = catId === 'all' ? lectures : lectures.filter(l => l.category === catId);
+      const grid = root.querySelector('[data-lec-grid]');
+      const count = root.querySelector('[data-lec-count]');
+      if (grid) grid.innerHTML = filtered.length
+        ? filtered.map(lectureCard).join('')
+        : `<div class="col-span-full py-16 text-center text-[var(--alm-muted)]">${icon('inbox','h-10 w-10 mx-auto mb-3')} لا توجد محاضرات في هذه الفئة بعد.</div>`;
+      if (count) count.textContent = filtered.length;
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // بناء الـHTML
+    root.innerHTML = `
+      <div class="alm-panel mb-5 p-5">
+        <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+          <div><span class="alm-badge gold">Lectures</span><h1 class="mt-2 text-3xl font-black">المحاضرات</h1><p class="mt-1 text-sm text-[var(--alm-muted)]"><span data-lec-count>${lectures.length}</span> محاضرة متاحة</p></div>
+          <a class="alm-btn alm-btn-primary" href="upload.html">${icon('upload-cloud')} رفع محاضرة جديدة</a>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2" data-cat-filter>
+          <button class="alm-btn alm-btn-primary" data-cat="all">الكل</button>
+          ${cats.map(c => `<button class="alm-btn alm-btn-secondary" data-cat="${c.id}">${icon(c.icon,'h-4 w-4')} ${c.name}</button>`).join('')}
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-lec-grid></div>`;
+
+    root.querySelector('[data-cat-filter]').addEventListener('click', e => {
+      const btn = e.target.closest('[data-cat]');
+      if (!btn) return;
+      root.querySelectorAll('[data-cat]').forEach(b => {
+        b.classList.toggle('alm-btn-primary', b === btn);
+        b.classList.toggle('alm-btn-secondary', b !== btn);
+      });
+      render(btn.dataset.cat);
+    });
+
+    render('all');
+  }
+
+  /* ============== نموذج رفع المحاضرة المتقدّم ============== */
+  function initLectureUpload(selector = '[data-lecture-upload]') {
+    const root = document.querySelector(selector);
+    const cats = data.lectureCategories || [];
+    if (!root) return;
+
+    let videoMode = 'youtube'; // 'youtube' | 'local'
+    let lectureType = 'single'; // 'single' | 'series'
+    let attachments = [];
+    let mainFile = null;
+    let mainFileProgress = 0;
+
+    function human(b) {
+      if (b < 1048576) return (b/1024).toFixed(1)+' KB';
+      return (b/1048576).toFixed(1)+' MB';
+    }
+
+    function ytId(url) {
+      const m = url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    function render() {
+      root.innerHTML = `
+      <div class="grid gap-5 xl:grid-cols-[1fr_320px]">
+        <div class="space-y-5">
+
+          <!-- بيانات المحاضرة -->
+          <div class="alm-panel p-6">
+            <h2 class="mb-4 text-xl font-black">بيانات المحاضرة</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+              <label class="block"><span class="mb-1 block text-sm font-bold">الفئة <span class="text-[var(--alm-danger)]">*</span></span>
+                <select class="alm-input" id="lec-cat">
+                  <option value="">— اختر الفئة —</option>
+                  ${cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                </select></label>
+              <label class="block"><span class="mb-1 block text-sm font-bold">نوع المحاضرة <span class="text-[var(--alm-danger)]">*</span></span>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                  <button id="type-single" class="alm-btn ${lectureType==='single'?'alm-btn-primary':'alm-btn-secondary'}" data-type="single">${icon('film','h-4 w-4')} مستقلّة</button>
+                  <button id="type-series" class="alm-btn ${lectureType==='series'?'alm-btn-primary':'alm-btn-secondary'}" data-type="series">${icon('list-video','h-4 w-4')} سلسلة</button>
+                </div></label>
+              ${lectureType === 'series' ? `
+              <label class="block"><span class="mb-1 block text-sm font-bold">اسم السلسلة</span><input class="alm-input" id="lec-series" placeholder="مثال: سلسلة تفسير جزء عمّ" /></label>
+              <label class="block"><span class="mb-1 block text-sm font-bold">رقم الحلقة في السلسلة</span><input class="alm-input" id="lec-order" type="number" min="1" placeholder="1" /></label>` : ''}
+              <label class="block md:col-span-2"><span class="mb-1 block text-sm font-bold">عنوان المحاضرة <span class="text-[var(--alm-danger)]">*</span></span><input class="alm-input" id="lec-title" placeholder="مثال: تفسير سورة النبأ — الآيات ١-١٠" /></label>
+              <label class="block md:col-span-2"><span class="mb-1 block text-sm font-bold">وصف مختصر</span><textarea class="alm-input min-h-24" id="lec-desc" placeholder="نبذة عن محتوى المحاضرة وأهدافها..."></textarea></label>
+            </div>
+          </div>
+
+          <!-- مصدر الفيديو -->
+          <div class="alm-panel p-6">
+            <h2 class="mb-4 text-xl font-black">مصدر الفيديو</h2>
+            <div class="mb-4 grid grid-cols-2 gap-3">
+              <button class="alm-btn ${videoMode==='youtube'?'alm-btn-primary':'alm-btn-secondary'} justify-center" data-vmode="youtube">
+                ${icon('youtube','h-5 w-5')} يوتيوب (أونلاين)
+              </button>
+              <button class="alm-btn ${videoMode==='local'?'alm-btn-primary':'alm-btn-secondary'} justify-center" data-vmode="local">
+                ${icon('hard-drive','h-5 w-5')} ملف محلي (أوفلاين)
+              </button>
+            </div>
+            ${videoMode === 'youtube' ? `
+            <div id="youtube-panel">
+              <label class="block"><span class="mb-1 block text-sm font-bold">رابط يوتيوب</span>
+                <input class="alm-input" id="yt-url" placeholder="https://www.youtube.com/watch?v=..." />
+              </label>
+              <div id="yt-preview" class="mt-4 hidden">
+                <p class="mb-2 text-sm font-bold text-[var(--alm-muted)]">معاينة الفيديو:</p>
+                <div class="relative overflow-hidden rounded-2xl" style="padding-top:56.25%">
+                  <iframe id="yt-iframe" class="absolute inset-0 h-full w-full" frameborder="0" allowfullscreen></iframe>
+                </div>
+              </div>
+              <p class="mt-3 text-xs text-[var(--alm-muted)]">${icon('info','h-4 w-4 inline')} أدخل رابط الفيديو لمعاينته مباشرة. تأكّد أن الفيديو غير مقيّد (Private).</p>
+            </div>` : `
+            <div id="local-panel">
+              <div data-video-drop class="grid place-items-center rounded-2xl border-2 border-dashed border-[var(--alm-line)] bg-[var(--alm-cream-50)] p-8 text-center cursor-pointer transition">
+                ${icon('upload-cloud','h-10 w-10 text-[var(--alm-green-700)] mx-auto')}
+                <b class="mt-3 block">اسحب ملف الفيديو هنا أو اضغط للاختيار</b>
+                <span class="mt-1 text-sm text-[var(--alm-muted)]">MP4 · MKV · MOV · AVI · حتى 500MB</span>
+                <input type="file" accept="video/*" class="hidden" id="video-input" />
+              </div>
+              <div id="video-preview" class="mt-4 hidden">
+                <div class="flex items-center justify-between rounded-xl border border-[var(--alm-line)] bg-white p-3">
+                  <span class="flex items-center gap-3">${icon('film','h-8 w-8 text-[var(--alm-green-700)]')}<span><b id="video-name" class="block text-sm"></b><span id="video-size" class="text-xs text-[var(--alm-muted)]"></span></span></span>
+                  <button id="video-remove" class="rounded-lg p-2 text-[var(--alm-muted)] hover:text-[var(--alm-danger)]">${icon('trash-2','h-4 w-4')}</button>
+                </div>
+                <div class="mt-2 flex items-center gap-3"><div class="alm-progress flex-1"><span id="video-bar" style="width:0%"></span></div><span id="video-pct" class="text-xs font-bold text-[var(--alm-muted)]">0%</span></div>
+              </div>
+            </div>`}
+          </div>
+
+          <!-- المرفقات -->
+          <div class="alm-panel p-6">
+            <h2 class="mb-1 text-xl font-black">المرفقات</h2>
+            <p class="mb-4 text-sm text-[var(--alm-muted)]">ملخّصات PDF، خرائط ذهنية، أوراق عمل، صوتيات...</p>
+            <div data-att-uploader></div>
+          </div>
+        </div>
+
+        <!-- الشريط الجانبي -->
+        <aside class="space-y-4">
+          <div class="alm-panel p-5">
+            <h3 class="text-lg font-black">حالة النشر</h3>
+            <div class="mt-4 space-y-3 text-sm">
+              <div class="flex items-center justify-between rounded-xl bg-white p-3"><span>الحفظ كمسودة</span><span class="alm-badge">تلقائي</span></div>
+              <div class="flex items-center justify-between rounded-xl bg-white p-3"><span>مراجعة الإدارة</span><span class="alm-badge gold">قبل النشر</span></div>
+              <div class="flex items-center justify-between rounded-xl bg-white p-3"><span>إشعار للطلاب</span><span class="alm-badge">عند النشر</span></div>
+            </div>
+            <div class="mt-4 grid gap-2">
+              <button class="alm-btn alm-btn-secondary w-full justify-center" id="btn-draft">${icon('save','h-4 w-4')} حفظ كمسودة</button>
+              <button class="alm-btn alm-btn-primary w-full justify-center" id="btn-publish">${icon('send','h-4 w-4')} رفع ونشر المحاضرة</button>
+            </div>
+          </div>
+          <div class="alm-panel p-5">
+            <h3 class="text-lg font-black">إرشادات</h3>
+            <ul class="mt-3 space-y-2 text-sm text-[var(--alm-muted)]">
+              <li class="flex gap-2">${icon('check','h-4 w-4 text-[var(--alm-success)] shrink-0')} يوتيوب: تأكّد أن الرابط عام أو غير مُدرَج.</li>
+              <li class="flex gap-2">${icon('check','h-4 w-4 text-[var(--alm-success)] shrink-0')} ملف محلي: MP4 بدقة 720p+، حتى 500MB.</li>
+              <li class="flex gap-2">${icon('check','h-4 w-4 text-[var(--alm-success)] shrink-0')} المرفقات: PDF أو صورة، حتى 50MB لكل ملف.</li>
+              <li class="flex gap-2">${icon('check','h-4 w-4 text-[var(--alm-success)] shrink-0')} السلاسل: حدّد اسم السلسلة ورقم الحلقة بدقة.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>`;
+
+      if (window.lucide) window.lucide.createIcons();
+      bindEvents();
+    }
+
+    function bindEvents() {
+      // نوع المحاضرة
+      root.querySelectorAll('[data-type]').forEach(btn => btn.addEventListener('click', () => {
+        lectureType = btn.dataset.type; render();
+      }));
+
+      // مصدر الفيديو
+      root.querySelectorAll('[data-vmode]').forEach(btn => btn.addEventListener('click', () => {
+        videoMode = btn.dataset.vmode; mainFile = null; mainFileProgress = 0; render();
+      }));
+
+      // معاينة يوتيوب
+      const ytInput = root.querySelector('#yt-url');
+      if (ytInput) {
+        ytInput.addEventListener('input', () => {
+          const id = ytId(ytInput.value.trim());
+          const preview = root.querySelector('#yt-preview');
+          const iframe = root.querySelector('#yt-iframe');
+          if (id && preview && iframe) {
+            iframe.src = `https://www.youtube.com/embed/${id}`;
+            preview.classList.remove('hidden');
+          } else if (preview) {
+            preview.classList.add('hidden');
+          }
+        });
+      }
+
+      // رفع ملف الفيديو (محلي)
+      const videoDrop = root.querySelector('[data-video-drop]');
+      const videoInput = root.querySelector('#video-input');
+      if (videoDrop && videoInput) {
+        videoDrop.addEventListener('click', () => videoInput.click());
+        ['dragenter','dragover'].forEach(ev => videoDrop.addEventListener(ev, e => { e.preventDefault(); videoDrop.classList.add('border-[var(--alm-gold-500)]'); }));
+        ['dragleave','drop'].forEach(ev => videoDrop.addEventListener(ev, e => { e.preventDefault(); videoDrop.classList.remove('border-[var(--alm-gold-500)]'); }));
+        videoDrop.addEventListener('drop', e => { if (e.dataTransfer?.files[0]) setVideoFile(e.dataTransfer.files[0]); });
+        videoInput.addEventListener('change', () => { if (videoInput.files[0]) setVideoFile(videoInput.files[0]); });
+        const removeBtn = root.querySelector('#video-remove');
+        if (removeBtn) removeBtn.addEventListener('click', () => { mainFile = null; mainFileProgress = 0; render(); });
+      }
+
+      // المرفقات
+      initUploader('[data-att-uploader]');
+
+      // أزرار النشر
+      const btnDraft = root.querySelector('#btn-draft');
+      const btnPublish = root.querySelector('#btn-publish');
+      if (btnDraft) btnDraft.addEventListener('click', () => showToast('تم حفظ المحاضرة كمسودة'));
+      if (btnPublish) btnPublish.addEventListener('click', () => {
+        const title = root.querySelector('#lec-title')?.value.trim();
+        const cat = root.querySelector('#lec-cat')?.value;
+        if (!title) { showToast('أدخل عنوان المحاضرة أولاً'); return; }
+        if (!cat) { showToast('اختر فئة المحاضرة أولاً'); return; }
+        if (videoMode === 'youtube' && !ytId(root.querySelector('#yt-url')?.value || '')) { showToast('أدخل رابط يوتيوب صحيح أولاً'); return; }
+        if (videoMode === 'local' && !mainFile) { showToast('أضف ملف الفيديو أولاً'); return; }
+        showToast('تم رفع المحاضرة ونشرها بنجاح ✓');
+        setTimeout(() => { window.location.href = 'lectures.html'; }, 1800);
+      });
+    }
+
+    function setVideoFile(file) {
+      if (!file.type.startsWith('video/')) { showToast('الملف المحدد ليس فيديو'); return; }
+      if (file.size > 500 * 1048576) { showToast('حجم الفيديو يتجاوز 500MB'); return; }
+      mainFile = file;
+      mainFileProgress = 0;
+      render();
+      // محاكاة التقدّم
+      const bar = root.querySelector('#video-bar');
+      const pct = root.querySelector('#video-pct');
+      const nm  = root.querySelector('#video-name');
+      const sz  = root.querySelector('#video-size');
+      const pr  = root.querySelector('#video-preview');
+      if (nm) nm.textContent = file.name;
+      if (sz) sz.textContent = human(file.size);
+      if (pr) pr.classList.remove('hidden');
+      const t = setInterval(() => {
+        mainFileProgress = Math.min(100, mainFileProgress + Math.random() * 15 + 5);
+        if (bar) bar.style.width = mainFileProgress + '%';
+        if (pct) { pct.textContent = mainFileProgress >= 100 ? 'اكتمل ✓' : Math.round(mainFileProgress) + '%'; pct.className = 'text-xs font-bold ' + (mainFileProgress >= 100 ? 'text-[var(--alm-success)]' : 'text-[var(--alm-muted)]'); }
+        if (mainFileProgress >= 100) clearInterval(t);
+      }, 300);
+    }
+
+    render();
+  }
+
   function initPage(config = {}) {
     renderLayout(config.active || document.body.dataset.page || 'student', config.title || document.title, config.subtitle || 'منصة المنهاج');
     renderCourses();
@@ -629,6 +932,8 @@ const Alminhaj = (() => {
     renderMindmap();
     initCourseFilter();
     initUploader();
+    initLecturesPage();
+    initLectureUpload();
     if (window.lucide) window.lucide.createIcons();
   }
 
@@ -651,6 +956,8 @@ const Alminhaj = (() => {
     renderMindmap,
     initCourseFilter,
     initUploader,
+    initLecturesPage,
+    initLectureUpload,
     initPage
   };
 })();
