@@ -674,6 +674,371 @@ const Alminhaj = (() => {
     });
   }
 
+  /* ============================================================
+     محرّك الداشبورد — يحسب كل الإحصائيات من البيانات
+     ============================================================ */
+  function getDashStats() {
+    const lectures  = data.lectures || [];
+    const cats      = CatStore.all();
+    const students  = data.students || [];
+    const lb        = data.leaderboard || [];
+    const activity  = data.activity || [];
+    const stats     = data.stats || {};
+
+    const published = lectures.filter(l => l.status === 'published');
+    const drafts    = lectures.filter(l => l.status === 'draft');
+    const reviews   = lectures.filter(l => l.status === 'review');
+    const totalStudents = lectures.reduce((s, l) => s + (l.students || 0), 0) || stats.students || 1000;
+
+    const byCategory = cats.map(c => ({
+      ...c,
+      total:     lectures.filter(l => l.category === c.id).length,
+      published: lectures.filter(l => l.category === c.id && l.status === 'published').length,
+      students:  lectures.filter(l => l.category === c.id).reduce((s, l) => s + (l.students || 0), 0),
+    })).filter(c => c.total > 0).sort((a, b) => b.total - a.total);
+
+    const recent = [...lectures].sort((a, b) =>
+      (b.publishedAt || '').localeCompare(a.publishedAt || '')).slice(0, 6);
+
+    let lastResult = null;
+    try { lastResult = JSON.parse(localStorage.getItem('alm_quiz_result')); } catch {}
+
+    const avgScore = lastResult ? lastResult.percent : 80;
+
+    return {
+      lectures, published, drafts, reviews, recent,
+      totalLectures: lectures.length,
+      totalPublished: published.length,
+      totalDrafts: drafts.length,
+      totalReviews: reviews.length,
+      byCategory,
+      totalStudents: stats.students || 250000,
+      totalTeachers: stats.teachers || 3000,
+      totalCerts:    stats.certificates || 1300,
+      totalQuizzes:  stats.completedQuizzes || 7200,
+      avgScore,
+      lastResult,
+      students,
+      leaderboard: lb,
+      activity,
+      liveStats: data.liveStats || [],
+    };
+  }
+
+  /* ============================================================
+     داشبورد الإدارة الشامل
+     ============================================================ */
+  function renderMainDashboard(selector = '[data-main-dashboard]') {
+    const root = document.querySelector(selector);
+    if (!root) return;
+    const s = getDashStats();
+    const maxCat = Math.max(...s.byCategory.map(c => c.total), 1);
+
+    const statusBadge = st => ({ published: `<span class="alm-badge text-xs">منشور</span>`, review: `<span class="alm-badge gold text-xs">مراجعة</span>`, draft: `<span class="text-xs text-[var(--alm-muted)] font-bold">مسودة</span>` }[st] || '');
+    const srcBadge = vt => vt === 'youtube'
+      ? `<span class="flex items-center gap-1 text-xs font-bold text-[#cc0000]">${icon('youtube','h-3.5 w-3.5')} يوتيوب</span>`
+      : `<span class="flex items-center gap-1 text-xs font-bold text-[var(--alm-muted)]">${icon('hard-drive','h-3.5 w-3.5')} محلي</span>`;
+
+    root.innerHTML = `
+    <!-- KPI cards -->
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6 mb-6">
+      ${[
+        ['المحاضرات الكل',   s.totalLectures,  'video',           'bg-[rgba(21,131,95,.10)] text-[var(--alm-green-800)]'],
+        ['منشورة',           s.totalPublished, 'circle-check',    'bg-[rgba(19,119,90,.10)] text-[var(--alm-success)]'],
+        ['الطلاب',           s.totalStudents.toLocaleString('ar-EG'), 'users','bg-[rgba(197,154,69,.14)] text-[#7a5516]'],
+        ['المعلمون',         s.totalTeachers.toLocaleString('ar-EG'),'presentation','bg-[rgba(21,131,95,.10)] text-[var(--alm-green-800)]'],
+        ['الاختبارات',       s.totalQuizzes.toLocaleString('ar-EG'), 'circle-help','bg-[rgba(197,154,69,.14)] text-[#7a5516]'],
+        ['متوسط النتائج',    s.avgScore+'%',   'chart-no-axes-gantt','bg-[rgba(19,119,90,.10)] text-[var(--alm-success)]'],
+      ].map(([lbl,val,ic,bg]) => `
+        <div class="alm-card p-5">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-sm font-bold text-[var(--alm-muted)]">${lbl}</span>
+            <span class="grid h-9 w-9 shrink-0 place-items-center rounded-xl ${bg}">${icon(ic,'h-4 w-4')}</span>
+          </div>
+          <b class="mt-3 block text-3xl leading-none">${val}</b>
+        </div>`).join('')}
+    </div>
+
+    <div class="grid gap-5 xl:grid-cols-[1fr_360px] mb-5">
+      <!-- المحاضرات حسب الفئة -->
+      <div class="alm-panel p-6">
+        <div class="mb-5 flex items-center justify-between">
+          <div><span class="alm-badge gold">Analytics</span><h2 class="mt-2 text-2xl font-black">المحاضرات حسب الفئة</h2></div>
+          <a class="alm-btn alm-btn-secondary !min-h-9 !px-3" href="lectures.html">${icon('arrow-left','h-4 w-4')} كل المحاضرات</a>
+        </div>
+        <div class="space-y-4">
+          ${s.byCategory.map(c => `
+          <div>
+            <div class="mb-1 flex items-center justify-between gap-2">
+              <span class="flex items-center gap-2 text-sm font-bold">
+                <span class="grid h-7 w-7 place-items-center rounded-lg text-white" style="background:${c.color}">${icon(c.icon,'h-3.5 w-3.5')}</span>
+                ${c.name}
+              </span>
+              <span class="text-xs font-bold text-[var(--alm-muted)]">${c.total} محاضرة · ${c.students.toLocaleString('ar-EG')} مشاهدة</span>
+            </div>
+            <div class="alm-progress h-3">
+              <span style="width:${Math.round((c.total/maxCat)*100)}%"></span>
+            </div>
+          </div>`).join('')}
+        </div>
+        ${s.byCategory.length === 0 ? `<p class="py-8 text-center text-[var(--alm-muted)]">لا توجد محاضرات بعد.</p>` : ''}
+      </div>
+
+      <!-- الحالات + مسودات -->
+      <div class="space-y-4">
+        ${[
+          ['منشورة', s.totalPublished, 'circle-check', 'var(--alm-success)', s.totalLectures],
+          ['قيد المراجعة', s.totalReviews, 'clock', 'var(--alm-warning)', s.totalLectures],
+          ['مسودات', s.totalDrafts, 'file', 'var(--alm-muted)', s.totalLectures],
+        ].map(([lbl,val,ic,clr,tot]) => `
+        <div class="alm-card p-4">
+          <div class="flex items-center gap-3">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-[rgba(21,131,95,.08)]" style="color:${clr}">${icon(ic,'h-5 w-5')}</span>
+            <span class="flex-1">
+              <b class="block text-sm">${lbl}</b>
+              <div class="mt-1 flex items-center gap-2"><div class="alm-progress flex-1"><span style="width:${tot?Math.round((val/tot)*100):0}%"></span></div><span class="text-xs font-bold">${val}</span></div>
+            </span>
+          </div>
+        </div>`).join('')}
+        <div class="alm-panel p-4 bg-[var(--alm-green-950)] text-white">
+          <h3 class="font-black mb-3">إجراءات سريعة</h3>
+          <div class="space-y-2">
+            <a href="upload.html" class="alm-btn alm-btn-gold w-full justify-center">${icon('upload-cloud','h-4 w-4')} رفع محاضرة</a>
+            <a href="categories.html" class="alm-btn border border-white/15 bg-white/10 text-white w-full justify-center">${icon('folders','h-4 w-4')} إدارة الفئات</a>
+            <a href="quiz.html" class="alm-btn border border-white/15 bg-white/10 text-white w-full justify-center">${icon('circle-help','h-4 w-4')} بدء اختبار</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- آخر المحاضرات + نتائج الاختبارات + المتصدّرون -->
+    <div class="grid gap-5 xl:grid-cols-[1fr_1fr_320px]">
+      <!-- جدول آخر المحاضرات -->
+      <div class="alm-panel p-5">
+        <h3 class="mb-4 text-xl font-black">آخر المحاضرات</h3>
+        <div class="space-y-3">
+          ${s.recent.map(l => `
+          <div class="flex items-center gap-3 rounded-xl border border-[var(--alm-line)] bg-white p-3">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--alm-cream-100)] text-[var(--alm-green-800)]">${icon('video','h-4 w-4')}</span>
+            <div class="min-w-0 flex-1">
+              <b class="block truncate text-sm">${l.title}</b>
+              <span class="text-xs text-[var(--alm-muted)]">${l.instructor} · ${l.duration}</span>
+            </div>
+            <div class="flex flex-col items-end gap-1">${statusBadge(l.status)}${srcBadge(l.videoType)}</div>
+          </div>`).join('')}
+          ${s.recent.length===0?`<p class="py-6 text-center text-sm text-[var(--alm-muted)]">لا توجد محاضرات.</p>`:''}
+        </div>
+      </div>
+
+      <!-- نتائج الاختبارات -->
+      <div class="alm-panel p-5">
+        <h3 class="mb-4 text-xl font-black">الاختبارات والنتائج</h3>
+        ${s.lastResult ? `
+        <div class="mb-4 rounded-2xl border border-[var(--alm-line)] bg-white p-4 text-center">
+          <span class="alm-badge gold mb-2">آخر نتيجة · ${s.lastResult.title || 'اختبار'}</span>
+          <div class="mx-auto my-3 grid h-24 w-24 place-items-center rounded-full border-8 ${s.lastResult.passed?'border-[var(--alm-gold-500)]':'border-[var(--alm-danger)]'} bg-[var(--alm-green-950)] text-white">
+            <b class="text-2xl">${s.lastResult.correct}/${s.lastResult.total}</b>
+          </div>
+          <div class="grid grid-cols-3 gap-3 text-center text-sm">
+            <div><b class="block text-lg text-[var(--alm-success)]">${s.lastResult.correct}</b><span class="text-[var(--alm-muted)]">صحيح</span></div>
+            <div><b class="block text-lg text-[var(--alm-danger)]">${s.lastResult.wrong}</b><span class="text-[var(--alm-muted)]">خطأ</span></div>
+            <div><b class="block text-lg">${s.lastResult.percent}%</b><span class="text-[var(--alm-muted)]">النسبة</span></div>
+          </div>
+        </div>` : `<div class="mb-4 rounded-2xl bg-[var(--alm-cream-100)] p-6 text-center text-sm text-[var(--alm-muted)]">${icon('circle-help','h-8 w-8 mx-auto mb-2')} لم تُجرِ اختباراً بعد.</div>`}
+        <div class="space-y-3">
+          ${[
+            ['اختبار سورة النبأ',    '10 أسئلة', s.lastResult?.percent+'%' || '—', s.lastResult?.passed],
+            ['اختبار النحو التطبيقي','8 أسئلة', '75%', true],
+            ['اختبار فقه الطهارة',  '12 سؤالاً','60%', true],
+          ].map(([t,q,sc,passed]) => `
+          <div class="flex items-center justify-between rounded-xl border border-[var(--alm-line)] bg-white p-3 text-sm">
+            <span><b class="block">${t}</b><span class="text-xs text-[var(--alm-muted)]">${q}</span></span>
+            <span class="font-black ${passed?'text-[var(--alm-success)]':'text-[var(--alm-danger)]'}">${sc}</span>
+          </div>`).join('')}
+        </div>
+        <a href="quiz.html" class="alm-btn alm-btn-primary mt-4 w-full justify-center">${icon('plus','h-4 w-4')} اختبار جديد</a>
+      </div>
+
+      <!-- المتصدّرون -->
+      <div class="alm-panel p-5">
+        <h3 class="mb-4 text-xl font-black">المتصدّرون</h3>
+        <div class="space-y-3">
+          ${s.leaderboard.map((item,i) => `
+          <div class="flex items-center gap-3 rounded-xl p-3 ${i===0?'bg-[rgba(197,154,69,.12)]':'bg-white'}">
+            <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full font-black text-sm ${i===0?'bg-[var(--alm-gold-500)] text-[var(--alm-green-950)]':i===1?'bg-[var(--alm-cream-200)]':i===2?'bg-[rgba(197,154,69,.25)]':'bg-[var(--alm-cream-100)]'}">${item.rank}</span>
+            <div class="flex-1 min-w-0"><b class="block truncate text-sm">${item.name}</b><span class="text-xs text-[var(--alm-muted)]">${item.city}</span></div>
+            <b class="text-sm">${Number(item.points).toLocaleString('ar-EG')}</b>
+          </div>`).join('')}
+        </div>
+        <a href="leaderboard.html" class="alm-btn alm-btn-secondary mt-4 w-full justify-center">${icon('bar-chart-3','h-4 w-4')} كل المتصدّرين</a>
+      </div>
+    </div>`;
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  /* ============================================================
+     داشبورد الطالب الشخصي
+     ============================================================ */
+  function renderStudentDashboard(selector = '[data-student-dashboard]') {
+    const root = document.querySelector(selector);
+    if (!root) return;
+    const s   = getDashStats();
+    const usr = data.currentUser || {};
+    const lec = s.lectures.filter(l => l.status === 'published');
+    const cats = CatStore.all();
+
+    root.innerHTML = `
+    <!-- تحيّة + كروت شخصية -->
+    <div class="mb-5 alm-panel p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--alm-green-950)] text-white overflow-hidden relative">
+      <div class="alm-pattern absolute inset-0 opacity-10"></div>
+      <div class="relative z-10">
+        <span class="alm-badge mb-2" style="background:rgba(234,216,163,.2);color:#ead8a3">رحلتك القرآنية</span>
+        <h1 class="text-2xl font-black">مرحباً، ${usr.name || 'محمود أحمد'} 👋</h1>
+        <p class="mt-1 text-sm text-white/70">أنت في مرحلة <b class="text-[var(--alm-gold-300)]">${usr.level || 'جزء عمّ'}</b> · واصل الرحلة!</p>
+      </div>
+      <div class="relative z-10 grid grid-cols-2 gap-3 md:flex md:gap-5">
+        ${[
+          ['تقدّمك', (usr.progress||73)+'%', 'chart-no-axes-gantt'],
+          ['نقاطك',  (usr.points||3250).toLocaleString('ar-EG'), 'star'],
+          ['الأيام المتتالية', (usr.streak||12)+' يوم', 'flame'],
+        ].map(([l,v,ic])=>`
+        <div class="text-center">
+          <span class="grid h-9 w-9 place-items-center rounded-xl bg-white/10 mx-auto mb-1">${icon(ic,'h-4 w-4')}</span>
+          <b class="block text-xl leading-none">${v}</b>
+          <span class="text-xs text-white/60">${l}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="grid gap-5 xl:grid-cols-[1fr_340px]">
+      <div class="space-y-5">
+        <!-- آخر نتيجة اختبار -->
+        ${s.lastResult ? `
+        <div class="alm-panel p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xl font-black">آخر نتيجة اختبار</h2>
+            <a href="result.html" class="alm-btn alm-btn-secondary !min-h-9 !px-3 text-xs">تفاصيل</a>
+          </div>
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+            ${[
+              ['النتيجة', s.lastResult.correct+'/'+s.lastResult.total, s.lastResult.passed?'text-[var(--alm-success)]':'text-[var(--alm-danger)]'],
+              ['النسبة',  s.lastResult.percent+'%',''],
+              ['الوقت',   s.lastResult.time,''],
+              ['الحالة',  s.lastResult.passed?'ناجح ✓':'راجع', s.lastResult.passed?'text-[var(--alm-success)]':'text-[var(--alm-warning)]'],
+            ].map(([l,v,cl])=>`
+            <div class="rounded-xl bg-[var(--alm-cream-100)] p-3 text-center">
+              <b class="block text-2xl ${cl}">${v}</b>
+              <span class="text-xs text-[var(--alm-muted)]">${l}</span>
+            </div>`).join('')}
+          </div>
+          <div class="mt-3 flex gap-3">
+            <a href="quiz.html"   class="alm-btn alm-btn-primary flex-1 justify-center">${icon('rotate-ccw','h-4 w-4')} اختبار جديد</a>
+            <a href="tafsir-reader.html" class="alm-btn alm-btn-secondary flex-1 justify-center">${icon('book-open','h-4 w-4')} راجع التفسير</a>
+          </div>
+        </div>` : `
+        <div class="alm-card p-5 flex items-center gap-4">
+          <span class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[rgba(197,154,69,.14)] text-[#7a5516]">${icon('circle-help','h-7 w-7')}</span>
+          <div class="flex-1"><b>لم تُجرِ اختباراً بعد</b><p class="mt-1 text-sm text-[var(--alm-muted)]">اختبر نفسك بعد مشاهدة أي محاضرة.</p></div>
+          <a href="quiz.html" class="alm-btn alm-btn-primary">${icon('arrow-left','h-4 w-4')} ابدأ</a>
+        </div>`}
+
+        <!-- المحاضرات المتاحة -->
+        <div class="alm-panel p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-xl font-black">المحاضرات المتاحة</h2>
+            <a href="lectures.html" class="alm-btn alm-btn-secondary !min-h-9 !px-3 text-xs">${icon('arrow-left','h-4 w-4')} الكل</a>
+          </div>
+          <!-- فلترة سريعة بالفئة -->
+          <div class="mb-4 flex flex-wrap gap-2" id="std-cat-filter">
+            <button class="alm-btn alm-btn-primary !min-h-8 !px-3 !text-xs" data-scat="all">الكل (${lec.length})</button>
+            ${cats.filter(c=>lec.some(l=>l.category===c.id)).map(c=>`
+            <button class="alm-btn alm-btn-secondary !min-h-8 !px-3 !text-xs" data-scat="${c.id}">${c.name} (${lec.filter(l=>l.category===c.id).length})</button>`).join('')}
+          </div>
+          <div class="space-y-3" id="std-lec-list">
+            ${lec.slice(0,5).map(l=>`
+            <a href="lesson.html" class="flex items-center gap-3 rounded-xl border border-[var(--alm-line)] bg-white p-3 transition hover:border-[var(--alm-gold-500)]">
+              <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--alm-green-900)] text-[var(--alm-gold-300)]">${icon('play','h-5 w-5 fill-current')}</span>
+              <div class="min-w-0 flex-1">
+                <b class="block truncate text-sm">${l.title}</b>
+                <span class="text-xs text-[var(--alm-muted)]">${l.instructor} · ${l.duration} · ${l.type==='series'?l.seriesName:'مستقلّة'}</span>
+              </div>
+              <div class="flex flex-col items-end gap-1">
+                ${l.videoType==='youtube'?`<span class="text-xs font-bold text-[#cc0000]">${icon('youtube','h-3.5 w-3.5 inline')} يوتيوب</span>`:``}
+                ${l.attachments?.length?`<span class="text-xs text-[var(--alm-muted)]">${icon('paperclip','h-3 w-3 inline')} ${l.attachments.length}</span>`:''}
+              </div>
+            </a>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- الجانب: التقدّم + الرحلة + النشاط -->
+      <aside class="space-y-4">
+        <div class="alm-panel p-5">
+          <h3 class="mb-4 text-xl font-black">تقدّمك العام</h3>
+          <div class="flex items-center gap-4">
+            <div class="alm-ring" style="--value:${usr.progress||73}"><span>${usr.progress||73}%</span></div>
+            <div>
+              <b class="text-xl">${usr.level||'جزء عمّ'}</b>
+              <p class="mt-1 text-sm text-[var(--alm-muted)]">المستوى الحالي</p>
+              <div class="mt-2 flex flex-wrap gap-1">
+                <span class="alm-badge text-xs">${icon('video','h-3 w-3')} ${lec.length} محاضرة</span>
+                <span class="alm-badge gold text-xs">${icon('star','h-3 w-3')} ${usr.points||3250} نقطة</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="alm-panel p-5">
+          <h3 class="mb-4 text-xl font-black">الرحلة القرآنية</h3>
+          <div class="relative space-y-3 pe-10 before:absolute before:end-4 before:top-5 before:h-[calc(100%-2.5rem)] before:w-1 before:rounded-full before:bg-gradient-to-b before:from-[var(--alm-green-700)] before:to-[var(--alm-gold-500)]">
+            ${[
+              ['جزء عمّ', 'قيد التعلّم', true],
+              ['الثلاثة الأجزاء الأولى','مغلق',false],
+              ['ربع القرآن','مغلق',false],
+              ['نصف القرآن','مغلق',false],
+              ['القرآن كاملاً','مغلق',false],
+            ].map(([t,sub,active],i)=>`
+            <div class="relative rounded-xl p-3 ${active?'bg-[rgba(197,154,69,.14)]':'bg-white'}">
+              <span class="absolute -end-9 top-3 grid h-7 w-7 place-items-center rounded-full text-sm font-black ${active?'bg-[var(--alm-gold-500)] text-[var(--alm-green-950)]':'bg-[var(--alm-green-800)] text-white'}">${i+1}</span>
+              <b class="block text-sm">${t}</b>
+              <span class="text-xs text-[var(--alm-muted)]">${sub}</span>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="alm-panel p-5">
+          <h3 class="mb-4 text-xl font-black">النشاط الأخير</h3>
+          <div class="space-y-3">
+            ${s.activity.map(a=>`
+            <div class="flex gap-3">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[rgba(21,131,95,.10)] text-[var(--alm-green-800)]">${icon(a.icon,'h-4 w-4')}</span>
+              <span><b class="block text-sm">${a.title}</b><span class="text-xs text-[var(--alm-muted)]">${a.time}</span></span>
+            </div>`).join('')}
+          </div>
+        </div>
+      </aside>
+    </div>`;
+
+    // فلترة محاضرات الطالب
+    root.querySelector('#std-cat-filter')?.addEventListener('click', e => {
+      const btn = e.target.closest('[data-scat]');
+      if (!btn) return;
+      root.querySelectorAll('[data-scat]').forEach(b => {
+        b.classList.toggle('alm-btn-primary', b === btn);
+        b.classList.toggle('alm-btn-secondary', b !== btn);
+      });
+      const cat = btn.dataset.scat;
+      const filtered = cat === 'all' ? lec : lec.filter(l => l.category === cat);
+      root.querySelector('#std-lec-list').innerHTML = filtered.slice(0,6).map(l=>`
+        <a href="lesson.html" class="flex items-center gap-3 rounded-xl border border-[var(--alm-line)] bg-white p-3 transition hover:border-[var(--alm-gold-500)]">
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--alm-green-900)] text-[var(--alm-gold-300)]">${icon('play','h-5 w-5 fill-current')}</span>
+          <div class="min-w-0 flex-1"><b class="block truncate text-sm">${l.title}</b><span class="text-xs text-[var(--alm-muted)]">${l.instructor} · ${l.duration}</span></div>
+        </a>`).join('') || `<p class="py-4 text-center text-sm text-[var(--alm-muted)]">لا توجد محاضرات في هذه الفئة.</p>`;
+      if (window.lucide) window.lucide.createIcons();
+    });
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
   /* ============== صفحة إدارة الفئات (CRUD ديناميكي) ============== */
   function initCategoriesPage(selector = '[data-categories-page]') {
     const root = document.querySelector(selector);
@@ -1180,6 +1545,8 @@ const Alminhaj = (() => {
     renderMindmap();
     initCourseFilter();
     initUploader();
+    renderMainDashboard();
+    renderStudentDashboard();
     initLecturesPage();
     initLectureUpload();
     initCategoriesPage();
@@ -1203,6 +1570,9 @@ const Alminhaj = (() => {
     renderResult,
     initTafsir,
     renderMindmap,
+    getDashStats,
+    renderMainDashboard,
+    renderStudentDashboard,
     initCourseFilter,
     initUploader,
     initLecturesPage,

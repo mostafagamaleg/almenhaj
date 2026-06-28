@@ -13,43 +13,237 @@
 <body data-page="admin">
   <div class="alm-shell" data-layout="app"></div>
   <template data-page-content>
-    <section class="alm-fade-in">
-      <div class="mb-6 grid gap-4 md:grid-cols-4" data-stats></div>
-      <div class="grid gap-5 xl:grid-cols-[1fr_360px]">
-        <div class="alm-panel bg-[var(--alm-green-950)] p-6 text-white">
-          <div class="mb-6 flex items-center justify-between">
-            <div><span class="alm-badge gold">Live Analytics</span><h2 class="mt-3 text-2xl font-black">الإحصائيات الحية</h2></div>
-            <a class="alm-btn border border-white/15 bg-white/10 text-white" href="analytics.html">فتح التحليلات</a>
+    <section class="alm-fade-in space-y-5">
+
+      <!-- KPI row -->
+      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div class="alm-card p-5">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-sm font-bold text-[var(--alm-muted)]">إجمالي الطلاب</span>
+            <span class="grid h-9 w-9 place-items-center rounded-xl bg-[rgba(197,154,69,.14)] text-[#7a5516]"><i data-lucide="users" class="h-4 w-4"></i></span>
           </div>
-          <div class="grid gap-4 md:grid-cols-[1fr_260px]">
-            <div class="alm-pattern grid min-h-[320px] place-items-center rounded-2xl border border-white/10 bg-white/10">
-              <div class="text-center"><i data-lucide="map-pinned" class="mx-auto h-24 w-24 text-[var(--alm-gold-300)]"></i><p class="mt-3 text-sm text-white/60">خريطة انتشار الطلاب</p></div>
+          <b class="mt-3 block text-3xl">250,000</b>
+          <span class="mt-1 flex items-center gap-1 text-xs font-bold text-[var(--alm-success)]"><i data-lucide="trending-up" class="h-3 w-3"></i> +12% هذا الشهر</span>
+        </div>
+        <div class="alm-card p-5">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-sm font-bold text-[var(--alm-muted)]">المعلمون</span>
+            <span class="grid h-9 w-9 place-items-center rounded-xl bg-[rgba(21,131,95,.10)] text-[var(--alm-green-800)]"><i data-lucide="presentation" class="h-4 w-4"></i></span>
+          </div>
+          <b class="mt-3 block text-3xl">3,000</b>
+          <span class="mt-1 text-xs text-[var(--alm-muted)]">في 27 محافظة</span>
+        </div>
+        <div class="alm-card p-5">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-sm font-bold text-[var(--alm-muted)]">المحاضرات المنشورة</span>
+            <span class="grid h-9 w-9 place-items-center rounded-xl bg-[rgba(21,131,95,.10)] text-[var(--alm-green-800)]"><i data-lucide="video" class="h-4 w-4"></i></span>
+          </div>
+          <b class="mt-3 block text-3xl" id="adm-pub-count">—</b>
+          <span class="mt-1 text-xs text-[var(--alm-muted)]" id="adm-lec-total">من — محاضرة إجمالاً</span>
+        </div>
+        <div class="alm-card p-5">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-sm font-bold text-[var(--alm-muted)]">الاختبارات المُجراة</span>
+            <span class="grid h-9 w-9 place-items-center rounded-xl bg-[rgba(197,154,69,.14)] text-[#7a5516]"><i data-lucide="circle-help" class="h-4 w-4"></i></span>
+          </div>
+          <b class="mt-3 block text-3xl">7,200</b>
+          <span class="mt-1 flex items-center gap-1 text-xs font-bold text-[var(--alm-success)]"><i data-lucide="trending-up" class="h-3 w-3"></i> اليوم</span>
+        </div>
+        <div class="alm-card p-5">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-sm font-bold text-[var(--alm-muted)]">الشهادات</span>
+            <span class="grid h-9 w-9 place-items-center rounded-xl bg-[rgba(197,154,69,.14)] text-[#7a5516]"><i data-lucide="award" class="h-4 w-4"></i></span>
+          </div>
+          <b class="mt-3 block text-3xl">1,300</b>
+          <a href="certificates.html" class="mt-1 flex items-center gap-1 text-xs font-bold text-[var(--alm-green-700)]">عرض الكل <i data-lucide="arrow-left" class="h-3 w-3"></i></a>
+        </div>
+      </div>
+
+      <!-- خريطة + أداء المحافظات -->
+      <div class="grid gap-5 xl:grid-cols-[1fr_280px]">
+        <div class="alm-panel bg-[var(--alm-green-950)] p-6 text-white">
+          <div class="mb-5 flex items-center justify-between">
+            <div><span class="alm-badge" style="background:rgba(234,216,163,.18);color:#ead8a3">Live Analytics</span><h2 class="mt-2 text-2xl font-black">الإحصائيات الحية</h2></div>
+            <a class="alm-btn border border-white/15 bg-white/10 text-white !min-h-9 !px-3" href="analytics.html"><i data-lucide="external-link" class="h-4 w-4"></i> تحليلات</a>
+          </div>
+          <div class="grid gap-3 md:grid-cols-4 mb-5">
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-center"><b class="block text-2xl text-[var(--alm-gold-300)]">18,500</b><span class="text-xs text-white/60">يشاهدون الآن</span></div>
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-center"><b class="block text-2xl text-[var(--alm-gold-300)]">7,200</b><span class="text-xs text-white/60">أتمّوا درساً</span></div>
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-center"><b class="block text-2xl text-[var(--alm-gold-300)]">1,300</b><span class="text-xs text-white/60">اجتازوا مرحلة</span></div>
+            <div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-center"><b class="block text-2xl text-[var(--alm-gold-300)]">350</b><span class="text-xs text-white/60">محاضرون نشطون</span></div>
+          </div>
+          <!-- محاضرات حسب الفئة - بار من البيانات الديناميكية -->
+          <div id="adm-cat-bars" class="space-y-3"></div>
+        </div>
+
+        <div class="alm-panel p-5">
+          <h3 class="mb-4 text-xl font-black">أداء المحافظات</h3>
+          <div class="space-y-4 text-sm">
+            <div><div class="flex justify-between mb-1"><span>القاهرة</span><b>85%</b></div><div class="alm-progress"><span style="width:85%"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>الجيزة</span><b>78%</b></div><div class="alm-progress"><span style="width:78%"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>الإسكندرية</span><b>74%</b></div><div class="alm-progress"><span style="width:74%"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>الشرقية</span><b>74%</b></div><div class="alm-progress"><span style="width:74%"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>المنوفية</span><b>70%</b></div><div class="alm-progress"><span style="width:70%"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>الدقهلية</span><b>68%</b></div><div class="alm-progress"><span style="width:68%"></span></div></div>
+          </div>
+          <a href="reports.html" class="alm-btn alm-btn-secondary mt-4 w-full justify-center"><i data-lucide="map-pinned" class="h-4 w-4"></i> تقرير المحافظات</a>
+        </div>
+      </div>
+
+      <!-- جدول الطلاب + المعلمون + الاختبارات -->
+      <div class="grid gap-5 xl:grid-cols-3">
+
+        <!-- جدول الطلاب -->
+        <div class="alm-panel p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="text-xl font-black">الطلاب</h3>
+            <span class="alm-badge">أحدث 6</span>
+          </div>
+          <div class="alm-table-wrap">
+            <table class="alm-table">
+              <thead><tr><th>الطالب</th><th>التقدّم</th><th>الحالة</th></tr></thead>
+              <tbody>
+                <tr><td>محمد علي</td><td>95%</td><td><span class="alm-badge text-xs">نشط</span></td></tr>
+                <tr><td>أحمد خالد</td><td>93%</td><td><span class="alm-badge text-xs">نشط</span></td></tr>
+                <tr><td>عمر سمير</td><td>92%</td><td><span class="alm-badge text-xs">نشط</span></td></tr>
+                <tr><td>يوسف محمد</td><td>90%</td><td><span class="alm-badge text-xs">نشط</span></td></tr>
+                <tr><td>أحمد حسن</td><td>45%</td><td><span class="alm-badge gold text-xs">متابعة</span></td></tr>
+                <tr><td>محمد إبراهيم</td><td>48%</td><td><span class="alm-badge gold text-xs">متابعة</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- جدول المعلمين -->
+        <div class="alm-panel p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="text-xl font-black">المعلمون</h3>
+            <a href="teacher.html" class="alm-btn alm-btn-secondary !min-h-8 !px-3 text-xs">لوحة الشيخ</a>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between rounded-xl bg-white p-3">
+              <span class="flex items-center gap-2">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-[var(--alm-green-800)] font-black text-sm text-white">م</span>
+                <span><b class="block text-sm">د. محمد الطيب</b><span class="text-xs text-[var(--alm-muted)]">430 طالب · ⭐ 4.8</span></span>
+              </span>
+              <b class="text-sm text-[var(--alm-success)]">81%</b>
             </div>
-            <div class="rounded-2xl border border-white/10 bg-white/10 p-5">
-              <h3 class="font-black">أداء المحافظات</h3>
-              <div class="mt-5 space-y-4 text-sm">
-                <div><div class="flex justify-between"><span>القاهرة</span><b>85%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:85%"></span></div></div>
-                <div><div class="flex justify-between"><span>الجيزة</span><b>76%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:76%"></span></div></div>
-                <div><div class="flex justify-between"><span>الإسكندرية</span><b>74%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:74%"></span></div></div>
-                <div><div class="flex justify-between"><span>المنوفية</span><b>70%</b></div><div class="alm-progress mt-2 bg-white/15"><span style="width:70%"></span></div></div>
-              </div>
+            <div class="flex items-center justify-between rounded-xl bg-white p-3">
+              <span class="flex items-center gap-2">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-[var(--alm-green-700)] font-black text-sm text-white">أ</span>
+                <span><b class="block text-sm">الشيخ أحمد سالم</b><span class="text-xs text-[var(--alm-muted)]">280 طالب · ⭐ 4.6</span></span>
+              </span>
+              <b class="text-sm text-[var(--alm-success)]">76%</b>
+            </div>
+            <div class="flex items-center justify-between rounded-xl bg-white p-3">
+              <span class="flex items-center gap-2">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-[var(--alm-green-600)] font-black text-sm text-white">ي</span>
+                <span><b class="block text-sm">أ. يوسف عمر</b><span class="text-xs text-[var(--alm-muted)]">195 طالب · ⭐ 4.5</span></span>
+              </span>
+              <b class="text-sm text-[var(--alm-success)]">74%</b>
+            </div>
+            <div class="flex items-center justify-between rounded-xl bg-white p-3">
+              <span class="flex items-center gap-2">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-[var(--alm-gold-500)] font-black text-sm text-[var(--alm-green-950)]">م</span>
+                <span><b class="block text-sm">أ. مريم خالد</b><span class="text-xs text-[var(--alm-muted)]">160 طالب · ⭐ 4.7</span></span>
+              </span>
+              <b class="text-sm text-[var(--alm-success)]">79%</b>
             </div>
           </div>
         </div>
-        <aside class="space-y-5">
-          <div class="alm-panel p-5">
-            <h3 class="text-xl font-black">إدارة النظام</h3>
-            <div class="mt-4 grid gap-3">
-              <a class="alm-card p-4" href="reports.html"><b>التقارير</b><span class="block text-sm text-[var(--alm-muted)]">تقارير الأداء والاختبارات</span></a>
-              <a class="alm-card p-4" href="settings.html"><b>الأدوار والصلاحيات</b><span class="block text-sm text-[var(--alm-muted)]">طلاب، معلمون، مشرفون</span></a>
-              <a class="alm-card p-4" href="course.html"><b>إدارة المسارات</b><span class="block text-sm text-[var(--alm-muted)]">42 مسار نشط</span></a>
+
+        <!-- الاختبارات والنتائج -->
+        <div class="alm-panel p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="text-xl font-black">الاختبارات والنتائج</h3>
+            <a href="quiz.html" class="alm-btn alm-btn-primary !min-h-8 !px-3 text-xs"><i data-lucide="plus" class="h-3.5 w-3.5"></i> اختبار</a>
+          </div>
+          <!-- آخر نتيجة ديناميكية -->
+          <div id="adm-last-result"></div>
+          <div class="mt-3 space-y-2">
+            <div class="flex items-center justify-between rounded-xl border border-[var(--alm-line)] bg-white p-3 text-sm">
+              <span><b class="block">اختبار سورة النبأ</b><span class="text-xs text-[var(--alm-muted)]">10 أسئلة</span></span>
+              <span class="font-black text-[var(--alm-success)]" id="adm-last-score">—</span>
+            </div>
+            <div class="flex items-center justify-between rounded-xl border border-[var(--alm-line)] bg-white p-3 text-sm">
+              <span><b class="block">اختبار النحو التطبيقي</b><span class="text-xs text-[var(--alm-muted)]">8 أسئلة</span></span>
+              <span class="font-black text-[var(--alm-success)]">75%</span>
+            </div>
+            <div class="flex items-center justify-between rounded-xl border border-[var(--alm-line)] bg-white p-3 text-sm">
+              <span><b class="block">اختبار فقه الطهارة</b><span class="text-xs text-[var(--alm-muted)]">12 سؤالاً</span></span>
+              <span class="font-black text-[var(--alm-success)]">60%</span>
             </div>
           </div>
-        </aside>
+          <div class="mt-4 grid gap-2">
+            <a href="quiz.html" class="alm-btn alm-btn-secondary w-full justify-center"><i data-lucide="circle-help" class="h-4 w-4"></i> بدء اختبار جديد</a>
+            <a href="result.html" class="alm-btn alm-btn-secondary w-full justify-center"><i data-lucide="bar-chart-3" class="h-4 w-4"></i> عرض النتائج</a>
+          </div>
+        </div>
+
       </div>
+
+      <!-- إدارة سريعة -->
+      <div class="alm-panel p-5">
+        <h3 class="mb-4 text-xl font-black">إدارة سريعة</h3>
+        <div class="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
+          <a href="lectures.html"   class="alm-card p-4 transition hover:-translate-y-1"><i data-lucide="video"        class="h-6 w-6 text-[var(--alm-gold-500)]"></i><b class="mt-3 block">المحاضرات</b><p class="mt-1 text-sm text-[var(--alm-muted)]">تصفّح وإدارة كل المحاضرات</p></a>
+          <a href="upload.html"     class="alm-card p-4 transition hover:-translate-y-1"><i data-lucide="upload-cloud" class="h-6 w-6 text-[var(--alm-gold-500)]"></i><b class="mt-3 block">رفع محاضرة</b><p class="mt-1 text-sm text-[var(--alm-muted)]">يوتيوب أو ملف محلي + مرفقات</p></a>
+          <a href="categories.html" class="alm-card p-4 transition hover:-translate-y-1"><i data-lucide="folders"      class="h-6 w-6 text-[var(--alm-gold-500)]"></i><b class="mt-3 block">الفئات</b><p class="mt-1 text-sm text-[var(--alm-muted)]">أضف وعدّل فئات المحاضرات</p></a>
+          <a href="reports.html"    class="alm-card p-4 transition hover:-translate-y-1"><i data-lucide="chart-column" class="h-6 w-6 text-[var(--alm-gold-500)]"></i><b class="mt-3 block">التقارير</b><p class="mt-1 text-sm text-[var(--alm-muted)]">تحليلات الأداء والنتائج</p></a>
+        </div>
+      </div>
+
     </section>
   </template>
-  <script src="js/data.js"></script><script src="js/app.js"></script><script src="js/navigation.js"></script>
-  <script>Alminhaj.initPage({active:'admin', title:'لوحة الإدارة', subtitle:'إدارة المنصة بالكامل'});</script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/navigation.js"></script>
+  <script>
+    Alminhaj.initPage({ active: 'admin', title: 'لوحة الإدارة', subtitle: 'إدارة المنصة بالكامل' });
+
+    // حقن البيانات الديناميكية
+    (function () {
+      const s = Alminhaj.getDashStats();
+
+      // KPI المحاضرات
+      const pubEl  = document.getElementById('adm-pub-count');
+      const totEl  = document.getElementById('adm-lec-total');
+      if (pubEl) pubEl.textContent = s.totalPublished;
+      if (totEl) totEl.textContent = 'من ' + s.totalLectures + ' محاضرة إجمالاً';
+
+      // بار الفئات
+      const barsEl = document.getElementById('adm-cat-bars');
+      if (barsEl && s.byCategory.length) {
+        const max = Math.max(...s.byCategory.map(c => c.total), 1);
+        barsEl.innerHTML = s.byCategory.map(c => `
+          <div>
+            <div class="mb-1 flex justify-between text-xs text-white/70"><span>${c.name}</span><span>${c.total} محاضرة</span></div>
+            <div class="h-2 rounded-full bg-white/15"><div class="h-full rounded-full bg-[var(--alm-gold-500)]" style="width:${Math.round((c.total/max)*100)}%"></div></div>
+          </div>`).join('');
+      }
+
+      // آخر نتيجة
+      const resEl   = document.getElementById('adm-last-result');
+      const scoreEl = document.getElementById('adm-last-score');
+      if (s.lastResult) {
+        if (scoreEl) scoreEl.textContent = s.lastResult.percent + '%';
+        if (resEl) resEl.innerHTML = `
+          <div class="mb-3 flex items-center gap-3 rounded-xl bg-[var(--alm-cream-100)] p-3">
+            <div class="grid h-14 w-14 shrink-0 place-items-center rounded-full border-4 ${s.lastResult.passed ? 'border-[var(--alm-gold-500)]' : 'border-[var(--alm-danger)]'} bg-[var(--alm-green-950)] text-white text-sm font-black">
+              ${s.lastResult.correct}/${s.lastResult.total}
+            </div>
+            <div>
+              <b class="block text-sm">${s.lastResult.title || 'آخر اختبار'}</b>
+              <span class="text-xs text-[var(--alm-muted)]">${s.lastResult.percent}% · ${s.lastResult.time} · ${s.lastResult.passed ? 'ناجح ✓' : 'راجع'}</span>
+            </div>
+          </div>`;
+      } else {
+        if (scoreEl) scoreEl.textContent = '—';
+        if (resEl) resEl.innerHTML = `<p class="mb-3 rounded-xl bg-[var(--alm-cream-100)] p-3 text-center text-sm text-[var(--alm-muted)]">لا توجد نتائج بعد.</p>`;
+      }
+
+      lucide.createIcons();
+    })();
+  </script>
 </body>
 </html>
