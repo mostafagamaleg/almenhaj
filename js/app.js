@@ -1,9 +1,64 @@
+/* ================================================================
+   CatStore — مخزن الفئات الديناميكي (localStorage)
+   الفئات الافتراضية تأتي من data.js، والمستخدم يضيف فوقها.
+   ================================================================ */
+const CatStore = (() => {
+  const KEY = 'alm_lecture_cats';
+  const ICONS = [
+    'layers','book-open','book-marked','scroll-text','pen-line','scale','video',
+    'graduation-cap','mic','users','star','heart','globe','compass','flask-conical',
+    'brain','lamp','leaf','music','monitor','file-text','award','shield','cpu'
+  ];
+
+  function defaults() {
+    return (window.AlminhajData?.lectureCategories || []).map(c => ({ ...c, _default: true }));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : defaults();
+    } catch { return defaults(); }
+  }
+
+  function save(cats) {
+    try { localStorage.setItem(KEY, JSON.stringify(cats)); } catch {}
+  }
+
+  function all()   { return load(); }
+  function icons() { return ICONS; }
+
+  function add(cat) {
+    const cats = load();
+    const id = 'cat-' + Date.now();
+    cats.push({ id, name: cat.name, icon: cat.icon || 'layers', color: cat.color || '#0a4d3f', desc: cat.desc || '' });
+    save(cats); return id;
+  }
+
+  function update(id, patch) {
+    const cats = load().map(c => c.id === id ? { ...c, ...patch } : c);
+    save(cats);
+  }
+
+  function remove(id) {
+    const cats = load().filter(c => c.id !== id);
+    save(cats);
+  }
+
+  function reset() { save(defaults()); }
+
+  return { all, icons, add, update, remove, reset };
+})();
+
+window.CatStore = CatStore;
+
 const Alminhaj = (() => {
   const data = window.AlminhajData || {};
 
   const pageMap = {
-    lectures: 'lectures.html',
-    upload: 'upload.html',
+    lectures:   'lectures.html',
+    upload:     'upload.html',
+    categories: 'categories.html',
     landing: 'index.html',
     login: 'login.html',
     register: 'register.html',
@@ -42,7 +97,8 @@ const Alminhaj = (() => {
     ['certificates','الشهادات',           'award'],
     ['leaderboard','المتصدّرون',          'bar-chart-3'],
     ['teacher',   'لوحة الشيخ',          'presentation'],
-    ['upload',    'رفع محاضرة',           'upload-cloud'],
+    ['upload',      'رفع محاضرة',           'upload-cloud'],
+    ['categories',  'إدارة الفئات',         'folders'],
     ['admin',     'الإدارة',              'shield-check'],
     ['reports',   'التقارير',             'chart-column'],
     ['settings',  'الإعدادات',            'settings'],
@@ -618,10 +674,202 @@ const Alminhaj = (() => {
     });
   }
 
+  /* ============== صفحة إدارة الفئات (CRUD ديناميكي) ============== */
+  function initCategoriesPage(selector = '[data-categories-page]') {
+    const root = document.querySelector(selector);
+    if (!root) return;
+
+    const COLORS = [
+      { hex: '#042a22', label: 'أخضر غامق جداً' },
+      { hex: '#063b30', label: 'أخضر غامق' },
+      { hex: '#0a4d3f', label: 'أخضر داكن' },
+      { hex: '#0f6b52', label: 'أخضر متوسط' },
+      { hex: '#15835f', label: 'أخضر فاتح' },
+      { hex: '#c59a45', label: 'ذهبي' },
+      { hex: '#7a5516', label: 'بني ذهبي' },
+      { hex: '#1e40af', label: 'أزرق' },
+      { hex: '#7c3aed', label: 'بنفسجي' },
+      { hex: '#b91c1c', label: 'أحمر' },
+    ];
+
+    let editId = null; // null = إضافة جديدة، string = تعديل
+
+    function renderList() {
+      const cats = CatStore.all();
+      const listEl = root.querySelector('[data-cat-list]');
+      if (!listEl) return;
+      listEl.innerHTML = cats.length ? cats.map(c => `
+        <div class="alm-card flex items-center gap-4 p-4" data-cat-row="${c.id}">
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white" style="background:${c.color}">
+            <i data-lucide="${c.icon}" class="h-5 w-5"></i>
+          </span>
+          <div class="min-w-0 flex-1">
+            <b class="block text-sm">${c.name}</b>
+            <span class="block truncate text-xs text-[var(--alm-muted)]">${c.desc || '—'}</span>
+          </div>
+          ${c._default ? `<span class="alm-badge text-xs">افتراضية</span>` : ''}
+          <div class="flex gap-2">
+            <button class="rounded-lg border border-[var(--alm-line)] bg-white p-2 hover:border-[var(--alm-gold-500)]" data-edit="${c.id}" title="تعديل">
+              <i data-lucide="pencil" class="h-4 w-4"></i>
+            </button>
+            <button class="rounded-lg border border-[var(--alm-line)] bg-white p-2 hover:border-[var(--alm-danger)] hover:text-[var(--alm-danger)]" data-delete="${c.id}" title="حذف">
+              <i data-lucide="trash-2" class="h-4 w-4"></i>
+            </button>
+          </div>
+        </div>`).join('')
+        : `<div class="py-12 text-center text-[var(--alm-muted)]">${icon('inbox','h-10 w-10 mx-auto mb-3')} لا توجد فئات بعد.</div>`;
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function renderForm(catId) {
+      const cats = CatStore.all();
+      const cat = catId ? cats.find(c => c.id === catId) : null;
+      const formEl = root.querySelector('[data-cat-form]');
+      if (!formEl) return;
+      const icons = CatStore.icons();
+      const curIcon = cat?.icon || 'layers';
+      const curColor = cat?.color || '#0a4d3f';
+      formEl.innerHTML = `
+        <h3 class="mb-4 text-lg font-black">${cat ? 'تعديل الفئة' : 'إضافة فئة جديدة'}</h3>
+        <div class="space-y-4">
+          <label class="block"><span class="mb-1 block text-sm font-bold">اسم الفئة <span class="text-[var(--alm-danger)]">*</span></span>
+            <input class="alm-input" id="cat-name" placeholder="مثال: التجويد" value="${cat?.name || ''}" /></label>
+          <label class="block"><span class="mb-1 block text-sm font-bold">وصف مختصر</span>
+            <input class="alm-input" id="cat-desc" placeholder="وصف الفئة..." value="${cat?.desc || ''}" /></label>
+          <div><span class="mb-2 block text-sm font-bold">الأيقونة</span>
+            <div class="grid grid-cols-6 gap-2" id="icon-grid">
+              ${icons.map(ic => `
+                <button type="button" data-icon="${ic}" title="${ic}"
+                  class="grid h-10 w-10 place-items-center rounded-xl border-2 transition ${ic === curIcon ? 'border-[var(--alm-gold-500)] bg-[rgba(197,154,69,.14)]' : 'border-[var(--alm-line)] bg-white hover:border-[var(--alm-gold-500)]'}">
+                  <i data-lucide="${ic}" class="h-5 w-5"></i>
+                </button>`).join('')}
+            </div>
+            <input type="hidden" id="cat-icon" value="${curIcon}" />
+          </div>
+          <div><span class="mb-2 block text-sm font-bold">اللون</span>
+            <div class="flex flex-wrap gap-2" id="color-grid">
+              ${COLORS.map(cl => `
+                <button type="button" data-color="${cl.hex}" title="${cl.label}"
+                  class="h-9 w-9 rounded-xl border-4 transition ${cl.hex === curColor ? 'border-[var(--alm-ink)] scale-110' : 'border-transparent hover:scale-105'}"
+                  style="background:${cl.hex}"></button>`).join('')}
+            </div>
+            <input type="hidden" id="cat-color" value="${curColor}" />
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button id="cat-save" class="alm-btn alm-btn-primary flex-1">${icon('check')} ${cat ? 'حفظ التعديلات' : 'إضافة الفئة'}</button>
+            <button id="cat-cancel" class="alm-btn alm-btn-secondary">${icon('x')} إلغاء</button>
+          </div>
+        </div>`;
+      if (window.lucide) window.lucide.createIcons();
+      bindForm(catId);
+    }
+
+    function bindForm(catId) {
+      // اختيار الأيقونة
+      root.querySelector('#icon-grid')?.addEventListener('click', e => {
+        const btn = e.target.closest('[data-icon]');
+        if (!btn) return;
+        root.querySelectorAll('[data-icon]').forEach(b => {
+          b.classList.toggle('border-[var(--alm-gold-500)]', b === btn);
+          b.classList.toggle('bg-[rgba(197,154,69,.14)]', b === btn);
+          b.classList.toggle('border-[var(--alm-line)]', b !== btn);
+        });
+        const hidIco = root.querySelector('#cat-icon');
+        if (hidIco) hidIco.value = btn.dataset.icon;
+      });
+      // اختيار اللون
+      root.querySelector('#color-grid')?.addEventListener('click', e => {
+        const btn = e.target.closest('[data-color]');
+        if (!btn) return;
+        root.querySelectorAll('[data-color]').forEach(b => {
+          b.classList.toggle('border-[var(--alm-ink)]', b === btn);
+          b.classList.toggle('scale-110', b === btn);
+          b.classList.toggle('border-transparent', b !== btn);
+        });
+        const hidCol = root.querySelector('#cat-color');
+        if (hidCol) hidCol.value = btn.dataset.color;
+      });
+      // حفظ
+      root.querySelector('#cat-save')?.addEventListener('click', () => {
+        const name = root.querySelector('#cat-name')?.value.trim();
+        if (!name) { showToast('أدخل اسم الفئة أولاً'); return; }
+        const payload = {
+          name,
+          desc:  root.querySelector('#cat-desc')?.value.trim() || '',
+          icon:  root.querySelector('#cat-icon')?.value || 'layers',
+          color: root.querySelector('#cat-color')?.value || '#0a4d3f',
+        };
+        if (catId) { CatStore.update(catId, payload); showToast('تم تعديل الفئة ✓'); }
+        else       { CatStore.add(payload);            showToast('تمت إضافة الفئة ✓'); }
+        editId = null;
+        renderList();
+        closeForm();
+      });
+      // إلغاء
+      root.querySelector('#cat-cancel')?.addEventListener('click', () => { editId = null; closeForm(); });
+    }
+
+    function closeForm() {
+      const formWrap = root.querySelector('[data-form-wrap]');
+      if (formWrap) { formWrap.classList.add('hidden'); }
+    }
+    function openForm(catId) {
+      const formWrap = root.querySelector('[data-form-wrap]');
+      if (formWrap) { formWrap.classList.remove('hidden'); }
+      renderForm(catId);
+      formWrap?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // HTML الصفحة
+    root.innerHTML = `
+      <div class="alm-panel mb-5 p-5">
+        <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          <div><span class="alm-badge gold">Categories</span>
+            <h1 class="mt-2 text-3xl font-black">إدارة فئات المحاضرات</h1>
+            <p class="mt-1 text-sm text-[var(--alm-muted)]">أضف وعدّل وارتّب فئاتك — تُحفظ تلقائياً وتظهر فوراً في صفحة المحاضرات ونموذج الرفع.</p>
+          </div>
+          <div class="flex gap-3">
+            <button id="btn-add-cat" class="alm-btn alm-btn-primary">${icon('plus')} إضافة فئة جديدة</button>
+            <button id="btn-reset-cats" class="alm-btn alm-btn-secondary">${icon('rotate-ccw')} استعادة الافتراضية</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid gap-5 xl:grid-cols-[1fr_380px]">
+        <div class="space-y-3" data-cat-list></div>
+        <div class="hidden" data-form-wrap>
+          <div class="alm-panel p-5 sticky top-24" data-cat-form></div>
+        </div>
+      </div>`;
+
+    renderList();
+
+    root.addEventListener('click', e => {
+      if (e.target.closest('#btn-add-cat'))    { openForm(null); return; }
+      if (e.target.closest('#btn-reset-cats')) {
+        if (confirm('هتُستعاد الفئات الافتراضية وستُحذف فئاتك المضافة. متأكّد؟')) {
+          CatStore.reset(); renderList(); closeForm(); showToast('تمت استعادة الفئات الافتراضية');
+        }
+        return;
+      }
+      const editBtn = e.target.closest('[data-edit]');
+      if (editBtn) { openForm(editBtn.dataset.edit); return; }
+      const delBtn = e.target.closest('[data-delete]');
+      if (delBtn) {
+        const cats = CatStore.all();
+        const cat  = cats.find(c => c.id === delBtn.dataset.delete);
+        if (cat && confirm(`حذف فئة "${cat.name}"؟`)) {
+          CatStore.remove(delBtn.dataset.delete);
+          renderList(); closeForm();
+          showToast(`تم حذف فئة "${cat.name}"`);
+        }
+      }
+    });
+  }
+
   /* ============== صفحة تصفّح المحاضرات ============== */
   function initLecturesPage(selector = '[data-lectures-page]') {
     const root = document.querySelector(selector);
-    const cats = data.lectureCategories || [];
+    const cats = CatStore.all();
     const lectures = data.lectures || [];
     if (!root) return;
 
@@ -708,7 +956,7 @@ const Alminhaj = (() => {
   /* ============== نموذج رفع المحاضرة المتقدّم ============== */
   function initLectureUpload(selector = '[data-lecture-upload]') {
     const root = document.querySelector(selector);
-    const cats = data.lectureCategories || [];
+    const cats = CatStore.all();
     if (!root) return;
 
     let videoMode = 'youtube'; // 'youtube' | 'local'
@@ -934,6 +1182,7 @@ const Alminhaj = (() => {
     initUploader();
     initLecturesPage();
     initLectureUpload();
+    initCategoriesPage();
     if (window.lucide) window.lucide.createIcons();
   }
 
@@ -958,6 +1207,7 @@ const Alminhaj = (() => {
     initUploader,
     initLecturesPage,
     initLectureUpload,
+    initCategoriesPage,
     initPage
   };
 })();
